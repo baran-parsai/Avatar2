@@ -16,11 +16,11 @@ class ProcessAudioNode(Node):
         self._threshold = self.get_parameter('threshold').get_parameter_value().double_value
         self.declare_parameter('dynamic', "False")
         self._dynamic = self.get_parameter('dynamic').get_parameter_value().bool_value
-        self.declare_parameter('phrase_time_limit', "20.0")
+        self.declare_parameter('phrase_time_limit', 20.0)
         self._phrase_time_limit = self.get_parameter('phrase_time_limit').get_parameter_value().double_value
-        self.declare_parameter('pause_threshold', "0.2")
+        self.declare_parameter('pause_threshold', 0.2)
         self._pause_threshold = self.get_parameter('pause_threshold').get_parameter_value().double_value
-        self.declare_parameter('non_speaking_duration', "0.1")
+        self.declare_parameter('non_speaking_duration', 0.1)
         self._non_speaking_duration = self.get_parameter('non_speaking_duration').get_parameter_value().double_value
         self.declare_parameter('sample_rate', 44100)
         self._sample_rate = self.get_parameter('sample_rate').get_parameter_value().integer_value
@@ -58,9 +58,8 @@ class ProcessAudioNode(Node):
 
 def main(args=None):
     rclpy.init(args=args)
-    node = ProcessAudioNode()
     try:
-        rclpy.spin(node)
+        node = ProcessAudioNode()
     except KeyboardInterrupt:
         pass
 

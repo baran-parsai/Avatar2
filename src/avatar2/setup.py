@@ -4,7 +4,7 @@ package_name = 'avatar2'
 
 setup(
     name=package_name,
-    version='0.0.1',
+    version='0.0.2',
     packages=[package_name],
     data_files=[
         ('share/ament_index/resource_index/packages', ['resource/' + package_name]),
@@ -20,7 +20,9 @@ setup(
     entry_points={
         'console_scripts': [
             'sound_capture = avatar2.audio_input:main',
+            'sound_play = avatar2.audio_input_wav:main',
             'sound_dump = avatar2.audio_dump:main',
+            'sound_to_text = avatar2.audio_to_text:main',
             'avatar_camera = avatar2.opencv_camera:main',
             'head_info = avatar2.yolo_head:main',
         ],
