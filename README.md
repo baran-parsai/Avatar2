@@ -29,6 +29,11 @@ So to run everything (from a live microphone)
 ros2 run avatar2 sound_capture  --ros-args -p non_speaking_duration:=1.0 -p pause_threshold:=1.0 &
 ros2 run avatar2 sound_to_text &
 ros2 topic echo /avatar2/message
+ros2 run avatar2 sentiment_analysis 
+
+The last just reads the text and pushes out a vector
+
+
 
 will give you the messages as text
 

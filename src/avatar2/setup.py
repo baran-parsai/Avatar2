@@ -24,8 +24,9 @@ setup(
             'sound_dump = avatar2.audio_dump:main',
             'sound_to_text = avatar2.audio_to_text:main',
             'avatar_camera = avatar2.opencv_camera:main',
-            'head_info = avatar2.yolo_head:main',
             'sentiment_analysis = avatar2.sentiment_analysis:main',
+            'head_info = avatar2.yolo_head:main',
+            'view_head_info = avatar2.view_face:main',
         ],
     },
 )
