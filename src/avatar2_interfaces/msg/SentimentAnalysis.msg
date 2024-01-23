@@ -1,4 +1,7 @@
+#
+# Encode audio signal-based sentiment analysis of speaker as a seven element vector.
+# The audio_sequence_number is the sequence number of the audio utterance this this
+# corresponds to.
 std_msgs/Header header
 int64 audio_sequence_number
-string audio #wav file as raw bytes
-float64[] results # anger, excited, neutral, sad, happy, fear surprised
+float64[] result # anger, excited, neutral, sad, happy, hear surprised
