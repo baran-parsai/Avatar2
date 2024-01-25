@@ -3,5 +3,5 @@
 # The audio_sequence_number is the sequence number of the audio utterance this this
 # corresponds to.
 std_msgs/Header header
-int64 audio_sequence_number
+uint64 audio_sequence_number
 float64[] result # anger, excited, neutral, sad, happy, hear surprised

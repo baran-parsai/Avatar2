@@ -23,7 +23,7 @@ public class Avatar : MonoBehaviour  {
 
 		Debug.Log("Connecting to ros");
 		ros = new ROSBridgeWebSocketConnection ("ws://192.168.1.41", 9090);
-		ros.AddSubscriber (typeof(AvatarAudioInput));
+		ros.AddSubscriber (typeof(AvatarAudioOutput));
 		Debug.Log("And off we go");
 		ros.Connect ();
 

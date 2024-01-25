@@ -25,6 +25,7 @@ find_package(rosidl_default_generators REQUIRED)
 # find_package(<dependency> REQUIRED)
 rosidl_generate_interfaces(${PROJECT_NAME}
   "msg/AudioInput.msg"
+  "msg/AudioOutput.msg"
   "msg/TaggedString.msg"
   "msg/SentimentAnalysis.msg"
   "msg/SpeakerInfo.msg"

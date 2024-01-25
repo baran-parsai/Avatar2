@@ -4,7 +4,7 @@ package_name = 'avatar2'
 
 setup(
     name=package_name,
-    version='0.0.2',
+    version='0.0.3',
     packages=[package_name],
     data_files=[
         ('share/ament_index/resource_index/packages', ['resource/' + package_name]),
@@ -27,6 +27,8 @@ setup(
             'sentiment_analysis = avatar2.sentiment_analysis:main',
             'head_info = avatar2.yolo_head:main',
             'view_head_info = avatar2.view_face:main',
+            'text_to_sound = avatar2.text_to_audio:main',
+            'play_text = avatar2.play_text:main',
         ],
     },
 )
