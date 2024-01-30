@@ -11,6 +11,8 @@ class SentimentAnalysisNode(Node):
         topic = self.get_parameter('topic').get_parameter_value().string_value
         self.declare_parameter('sentiment', '/avatar2/sentiment')
         sentiment = self.get_parameter('sentiment').get_parameter_value().string_value
+        self.declare_parameter('sentiments', ['anger', 'excited', 'neutral', 'sad', 'happy', 'fear', 'surprised'])
+        self._sentiments = self.get_parameter('sentiments').get_parameter_value().string_array_value
 
         self._sentimentAnalysis = Sentiment()
 
@@ -18,12 +20,20 @@ class SentimentAnalysisNode(Node):
         self._publisher = self.create_publisher(SentimentAnalysis, sentiment, QoSProfile(depth=1))
 
     def _callback(self, data):
+        self.get_logger().info(f"Sentiment analysis for {data.seq}")
         score = self._sentimentAnalysis.analyze(data.audio)
+        # sentiments = ['anger', 'excited', 'neutral', 'sad', 'happy', 'fear', 'surprised']
+        # self.get_logger().info(f"Sentiment score type {type(score)}")
+        max_index = score.argmax()
+        max_confidence = score[max_index]
+        max_feeling = self._sentiments[max_index]
 
         sentiment_analysis = SentimentAnalysis()
         sentiment_analysis.header.stamp = self.get_clock().now().to_msg()
         sentiment_analysis.audio_sequence_number = data.seq
-        sentiment_analysis.result = score
+        sentiment_analysis.result = score.tolist()
+        sentiment_analysis.confidence = max_confidence.item()
+        sentiment_analysis.emotion = max_feeling
         self._publisher.publish(sentiment_analysis)
 
 def main(args=None):
