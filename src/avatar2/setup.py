@@ -1,3 +1,5 @@
+import os
+from glob import glob
 from setuptools import setup
 
 package_name = 'avatar2'
@@ -9,6 +11,8 @@ setup(
     data_files=[
         ('share/ament_index/resource_index/packages', ['resource/' + package_name]),
         ('share/' + package_name, ['package.xml']),
+        (os.path.join('share', package_name), glob('/classification_model/*')),
+        (os.path.join('share', package_name), glob('/classifications/models/*')),
     ],
     install_requires=['setuptools'],
     zip_safe=True,

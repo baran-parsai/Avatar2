@@ -5,3 +5,5 @@
 std_msgs/Header header
 uint64 audio_sequence_number
 float64[] result # anger, excited, neutral, sad, happy, hear surprised
+float64 confidence
+string emotion
