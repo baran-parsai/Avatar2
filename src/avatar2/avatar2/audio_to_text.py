@@ -1,6 +1,7 @@
 import rclpy
 from rclpy.node import Node
 from avatar2_interfaces.msg import AudioInput, TaggedString
+from avatar2_interfaces.srv import Listen
 from rclpy.qos import QoSProfile
 import whisper
 import tempfile
@@ -17,13 +18,29 @@ class Audio2TextNode(Node):
         cuda = self.get_parameter('device').get_parameter_value().string_value
         self.declare_parameter('model', 'base') # or any valid whisper models
         model = self.get_parameter('model').get_parameter_value().string_value
+        self.declare_parameter('listen', '/avatar2/listen')
+        self._listen = self.get_parameter('listen').get_parameter_value().string_value
 
         self._model = whisper.load_model(model, device=cuda)
 
         self.create_subscription(AudioInput, topic, self._callback, QoSProfile(depth=1))
         self._publisher = self.create_publisher(TaggedString, message, QoSProfile(depth=1))
 
+        self.create_service(Listen, self._listen, self._listener_callback)
+        self._listening = True
+
+    def _listener_callback(self, msg, resp):
+        """Deal with service call to set listening status"""
+        self.get_logger().info(f"{self.get_name()} Setting listening status to {msg.listen}")
+        self._listening = msg.listen
+        resp.status = self._listening
+        return resp
+
     def _callback(self, data):
+        if not self._listening:
+            self.get_logger().info(f"{self.get_name()} Sorry, not listening")
+            return
+
         fd, path = tempfile.mkstemp(suffix=".wav")
         with os.fdopen(fd, 'wb') as f:
             f.write(bytes.fromhex(data.audio))

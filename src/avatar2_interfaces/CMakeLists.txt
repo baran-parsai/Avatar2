@@ -29,6 +29,7 @@ rosidl_generate_interfaces(${PROJECT_NAME}
   "msg/TaggedString.msg"
   "msg/SentimentAnalysis.msg"
   "msg/SpeakerInfo.msg"
+  "srv/Listen.srv"
   DEPENDENCIES std_msgs sensor_msgs
 )
 
