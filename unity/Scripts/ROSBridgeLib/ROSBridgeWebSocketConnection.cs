@@ -254,14 +254,14 @@ namespace ROSBridgeLib {
 		public void Publish(String topic, ROSBridgeMsg msg) {
 			if(_ws != null) {
 				string s = ROSBridgeMsg.Publish (topic, msg.ToYAMLString ());
-				//Debug.Log ("Sending " + s);
+				Debug.Log ("Sending " + s);
 				_ws.Send (s);
 			}
 		}
 
-		public void CallService(string service, string args) {
+		public void CallService(string service, string type, string args) {
 			if (_ws != null) {
-				string s = ROSBridgeMsg.CallService (service, args);
+				string s = ROSBridgeMsg.CallService (service, type, args);
 				Debug.Log ("Sending " + s);
 				_ws.Send (s);
 			}

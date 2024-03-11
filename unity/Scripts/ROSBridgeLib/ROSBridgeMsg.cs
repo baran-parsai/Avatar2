@@ -55,15 +55,15 @@ public class ROSBridgeMsg  {
 		return "{\"op\": \"unsubscribe\", \"topic\": \"" + messageTopic +  "\"}";
 	}
 	
-	public static string CallService(string service, string args) {
-		if((args == null)|| args.Equals(""))
-			return "{\"op\": \"call_service\", \"service\": \"" + service +  "\"}";
+	public static string CallService(string service, string type, string yamlArgs) {
+		if((yamlArgs == null)|| yamlArgs.Equals(""))
+			return "{\"op\": \"call_service\", \"service\": \"" + service +  "\", \"type\": \"" + type + "\" }";
 		else
-			return "{\"op\": \"call_service\", \"service\": \"" + service +  "\", \"args\" : " + args + "}";
+			return "{\"op\": \"call_service\", \"service\": \"" + service + "\", \"type\": \"" + type + "\", \"args\": " + yamlArgs + "}";
 	}
 	
-	public static string CallService(string service) {
-		return "{\"op\": \"call_service\", \"service\": \"" + service +  "\"}";
-	}
+	//public static string CallService(string service) {
+	//	return "{\"op\": \"call_service\", \"service\": \"" + service +  "\"}";
+	// }
 	
 }

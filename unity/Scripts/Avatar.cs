@@ -15,7 +15,9 @@ using ROSBridgeLib.avatar_msgs;
  **/
 
 public class Avatar : MonoBehaviour  {
-	private ROSBridgeWebSocketConnection ros = null;	
+	private ROSBridgeWebSocketConnection ros = null;
+	private bool pingedOff = false;
+	private bool pingedOn = false;
 
 
 	// the critical thing here is to define our subscribers, publishers and service response handlers
@@ -23,7 +25,8 @@ public class Avatar : MonoBehaviour  {
 
 		Debug.Log("Connecting to ros");
 		ros = new ROSBridgeWebSocketConnection ("ws://192.168.1.41", 9090);
-		ros.AddSubscriber (typeof(AvatarAudioOutput));
+        ros.AddSubscriber(typeof(AvatarAudioOutput));
+		ros.AddServiceResponse(typeof(ListenResponse));
 		Debug.Log("And off we go");
 		ros.Connect ();
 
@@ -39,6 +42,16 @@ public class Avatar : MonoBehaviour  {
 	void Update () {
 
 		ros.Render ();
+		if((!pingedOff) && (Time.realtimeSinceStartup > 5.0))
+        {
+			ros.CallService("/avatar2/listen", "avatar2_interfaces/srv/Listen", "{\"listen\": true}");
+			pingedOff = true;
+        }
+		if ((!pingedOn) && (Time.realtimeSinceStartup > 10.0))
+		{
+			ros.CallService("/avatar2/listen", "avatar2_interfaces/srv/Listen", "{\"listen\": false}");
+			pingedOn = true;
+		}
 
 	}
 }
