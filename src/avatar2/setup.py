@@ -13,6 +13,7 @@ setup(
         ('share/' + package_name, ['package.xml']),
         (os.path.join('share', package_name), glob('/classification_model/*')),
         (os.path.join('share', package_name), glob('/classifications/models/*')),
+        (os.path.join('share', package_name), glob('launch/*.py')),
     ],
     install_requires=['setuptools'],
     zip_safe=True,
@@ -33,6 +34,8 @@ setup(
             'view_head_info = avatar2.view_face:main',
             'text_to_sound = avatar2.text_to_audio:main',
             'play_text = avatar2.play_text:main',
+            'play_text_syncd = avatar2.play_text_syncd:main',
+            'llm_engine = avatar2.llm_engine:main',
         ],
     },
 )

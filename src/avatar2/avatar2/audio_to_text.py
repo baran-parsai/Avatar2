@@ -1,6 +1,6 @@
 import rclpy
 from rclpy.node import Node
-from avatar2_interfaces.msg import AudioInput, TaggedString
+from avatar2_interfaces.msg import Audio, TaggedString
 from avatar2_interfaces.srv import Listen
 from rclpy.qos import QoSProfile
 import whisper
@@ -10,9 +10,9 @@ import os
 class Audio2TextNode(Node):
     def __init__(self):
         super().__init__('audio_2_text_node')
-        self.declare_parameter('topic', '/avatar2/audio_input')
+        self.declare_parameter('topic', '/avatar2/in_raw_audio')
         topic = self.get_parameter('topic').get_parameter_value().string_value
-        self.declare_parameter('message', '/avatar2/message')
+        self.declare_parameter('message', '/avatar2/in_message')
         message = self.get_parameter('message').get_parameter_value().string_value
         self.declare_parameter('device', 'cuda') # or cpu
         cuda = self.get_parameter('device').get_parameter_value().string_value
@@ -23,7 +23,7 @@ class Audio2TextNode(Node):
 
         self._model = whisper.load_model(model, device=cuda)
 
-        self.create_subscription(AudioInput, topic, self._callback, QoSProfile(depth=1))
+        self.create_subscription(Audio, topic, self._callback, QoSProfile(depth=1))
         self._publisher = self.create_publisher(TaggedString, message, QoSProfile(depth=1))
 
         self.create_service(Listen, self._listen, self._listener_callback)

@@ -1,6 +1,6 @@
 import rclpy
 from rclpy.node import Node
-from avatar2_interfaces.msg import AudioOutput, TaggedString
+from avatar2_interfaces.msg import Audio, TaggedString
 from rclpy.qos import QoSProfile
 from TTS.utils.manage import ModelManager
 from TTS.utils.synthesizer import Synthesizer
@@ -12,9 +12,9 @@ import os
 class Text2AudioNode(Node):
     def __init__(self):
         super().__init__('text_to_audio_node')
-        self.declare_parameter('audio', '/avatar2/audio_output')
+        self.declare_parameter('audio', '/avatar2/out_raw_audio')
         audio = self.get_parameter('audio').get_parameter_value().string_value
-        self.declare_parameter('message', '/avatar2/message')
+        self.declare_parameter('message', '/avatar2/out_message')
         message = self.get_parameter('message').get_parameter_value().string_value
         self.declare_parameter('device', 'cuda') # or cpu
         cuda = self.get_parameter('device').get_parameter_value().string_value == 'cuda'
@@ -31,7 +31,7 @@ class Text2AudioNode(Node):
                                 vocoder_checkpoint=voc_path, vocoder_config=voc_config_path, use_cuda=cuda)
 
         self.create_subscription(TaggedString, message, self._callback, QoSProfile(depth=1))
-        self._publisher = self.create_publisher(AudioOutput, audio, QoSProfile(depth=1))
+        self._publisher = self.create_publisher(Audio, audio, QoSProfile(depth=1))
 
     def _callback(self, data):
         self.get_logger().info(f'{self.get_name()} about to say |{data.text.data}|')
@@ -43,10 +43,11 @@ class Text2AudioNode(Node):
         with open(fp.name, "rb") as f:
             audio_data = f.read()
 
-            msg = AudioOutput()
+            msg = Audio()
             msg.audio = audio_data.hex()
+            msg.format = "WAV_1_22050"  # known magically
             msg.header.stamp = self.get_clock().now().to_msg()
-            msg.audio_sequence_number = data.audio_sequence_number
+            msg.seq = data.audio_sequence_number
             self._publisher.publish(msg)
         os.remove(fp.name)
 
@@ -55,10 +56,10 @@ def main(args=None):
     node = Text2AudioNode()
     try:
         rclpy.spin(node)
+        node.destroy_node()
     except KeyboardInterrupt:
         pass
 
-    node.destroy_node()
 
 if __name__ == '__main__':
     main()

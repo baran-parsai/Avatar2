@@ -1,8 +1,6 @@
-#!/usr/bin/env python3
-
 import rclpy
 from rclpy.node import Node
-from avatar2_interfaces.msg import AudioInput
+from avatar2_interfaces.msg import Audio
 from rclpy.qos import QoSProfile
 from glob import glob
 
@@ -17,7 +15,7 @@ class AudioInputWavNode(Node):
         self._source = self.get_parameter('source').get_parameter_value().string_value
         self.declare_parameter('period', 1.0)
         self._period = self.get_parameter('period').get_parameter_value().double_value
-        self._publisher = self.create_publisher(AudioInput, self._topic, QoSProfile(depth=1))
+        self._publisher = self.create_publisher(Audio, self._topic, QoSProfile(depth=1))
 
         self._files = glob(self._source)
         self.get_logger().info(f"{self.get_name()} will play {self._files}")
@@ -31,8 +29,9 @@ class AudioInputWavNode(Node):
         with open(f"{self._files[self._file_id]}", "rb") as f:
             data = f.read()
 
-            msg = AudioInput()
+            msg = Audio()
             msg.audio = data.hex()
+            msg.format = "WAV_1_44100"  # great assumption here
             msg.header.stamp = self.get_clock().now().to_msg()
             msg.seq = self._msg_id
             self._msg_id = self._msg_id + 1

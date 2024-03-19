@@ -12,7 +12,7 @@ class PlayText(Node):
         super().__init__('play_text_node')
         self.declare_parameter('topic', '/avatar2/message')
         topic = self.get_parameter('topic').get_parameter_value().string_value
-        self.declare_parameter('period', 5.0)
+        self.declare_parameter('period', 0.5)
         self._period = self.get_parameter('period').get_parameter_value().double_value
 
 
@@ -20,26 +20,28 @@ class PlayText(Node):
         self._listen = self.get_parameter('listen').get_parameter_value().string_value
         self.create_service(Listen, self._listen, self._listener_callback)
 
-        self._messages = ["Welcome my son", "Welcome to the machine", "Where have you been?", "It's alright we know where you've been", 
-                          "You've been in the pipeline", "Filling in time", "Provided with toys and scouting for boys", 
-                          "You brought a guitar to punish your ma", "And you didn't like school", "And you know you're nobody's fool", 
+        self._messages = ["Welcome my son", "Welcome to the machine", "Where have you been?", "Its alright we know where you've been", 
+                          "You ve been in the pipeline", "Filling in time", "Provided with toys and scouting for boys", 
+                          "You bought a guitar to punish your ma", "And you didn't like school", "And you know you're nobody's fool", 
                           "So welcome to the machine", "Welcome my son", "Welcome to the machine", "What did you dream?", 
-                          "It's alright we told you what to dream", "You dreamed of a big star", "He played a mean guitar", 
+                          "Its alright we told you what to dream", "You dreamed of a big star", "He played a mean guitar", 
                           "He always ate in the Steak Bar", "He loved to drive in his Jaguar", "So welcome to the machine"]
         self._msg_id = 0
         self._seq = 0
 
         self._publisher = self.create_publisher(TaggedString, topic, QoSProfile(depth=1))
-        self.create_timer(self._period, self._timer_callback)
+        self._say_next()
 
 
     def _listener_callback(self, msg, resp):
         """Deal with service call to set listening status"""
-        self.get_logger().info(f"{self.get_name()} Ignoring effort to set listening callback to {msg.listen}")
-        resp.status = True
+        self.get_logger().info(f"{self.get_name()} Set listening callback to {msg.listen}")
+        resp.status = msg.listen
+        if msg.listen:
+            self._say_next()
         return resp
 
-    def _timer_callback(self):
+    def _say_next(self):
         self.get_logger().info(f'{self.get_name()} saying {self._messages[self._msg_id]}')
         tagged_string = TaggedString()
         tagged_string.header.stamp = self.get_clock().now().to_msg()
