@@ -28,12 +28,12 @@ class LLMEngine(Node):
 
     def _callback(self, msg):
         """Deal with translation"""
-        self.get_logger().info(f"{self.get_name()} listening got {msg}")
+        self.get_logger().info(f"{self.get_name()} listening got {msg.text.data}")
 
         tagged_string = TaggedString()
         tagged_string.header.stamp = self.get_clock().now().to_msg()
         tagged_string.audio_sequence_number = msg.audio_sequence_number
-        tagged_string.text.data = self._llm.response(msg.text)
+        tagged_string.text.data = self._llm.response(msg.text.data)
         self._publisher.publish(tagged_string)
 
 def main(args=None):
