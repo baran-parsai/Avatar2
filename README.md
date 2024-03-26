@@ -5,6 +5,16 @@ To run
 
 Build somewhere with a microphone
 
+There now exist three launch files to make running this easier
+
+avatar_microphone.launch.py should be run on the machine with the microphone. It will generate an amazing amount of junk output
+avatar_audio.launch.py does all of the audio work
+avatar_llm.launch.py runs the avatar
+
+By default the avatar does nothing. The file llm.py can be set to run a very simple avatar. Expect this to get better quickly. However, its a start.
+
+If you would prefer to run things at a somewhat lower level, you can access the various parts.
+
 ros2 run avatar2 sound_capture  --ros-args -p non_speaking_duration:=1.0 -p pause_threshold:=1.0
 
 will capture audio utterances from the default microphone and publish them as message. The two parameters above
