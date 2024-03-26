@@ -6,7 +6,7 @@ using UnityEngine;
 using System;
 
 
-public class ListenResponse 
+public class ListenResponse
 {
 
 
@@ -16,8 +16,11 @@ public class ListenResponse
 	{
 		Debug.Log("Service callback " + service + " " + msg);
 
+		GameObject obj = GameObject.Find("UMA avatar");
 
-
-
+		// AudioSource ass = obj.GetComponent<AudioSource>();
+		JSONNode node = JSONNode.Parse(msg);
+		Avatar avatar = obj.GetComponent<Avatar>();
+		avatar.DoServiceCallback(service, node);
 	}
 }
