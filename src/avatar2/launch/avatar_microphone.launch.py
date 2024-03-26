@@ -11,15 +11,10 @@ def generate_launch_description():
     return LaunchDescription([
         Node(
              package='avatar2',
-             executable='sound_to_text',
-             name='sound_to_text',
+             executable='sound_capture',
+             name='sound_capture',
              output='screen',
-             namespace="/avatar2"),
-        Node(
-             package='avatar2',
-             executable='text_to_sound',
-             name='text_to_sound',
-             output='screen',
-             namespace="/avatar2"),
+             namespace="/avatar2",
+             parameters=[{'non_speaking_duration': 1.0, 'pause_threshold': 1.0}]),
     ])
 

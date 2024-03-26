@@ -2,15 +2,17 @@ import rclpy
 from rclpy.node import Node
 from avatar2_interfaces.msg import TaggedString
 from rclpy.qos import QoSProfile
+from .llm import LLM
 import os
 
-class LLM:
-    def __init__(self):
-        print("LLM class created")
 
-    def response(self, s):
-        return "My response is " + str(s)
-
+#class LLM:
+#    def __init__(self):
+#        print("LLM class created")
+#
+#    def response(self, s):
+#        return "My response is " + str(s)
+#
 class LLMEngine(Node):
     def __init__(self):
         super().__init__('llm_engine_node')
@@ -35,6 +37,7 @@ class LLMEngine(Node):
         tagged_string.audio_sequence_number = msg.audio_sequence_number
         tagged_string.text.data = self._llm.response(msg.text.data)
         self._publisher.publish(tagged_string)
+        self.get_logger().info(f"{self.get_name()} published {msg.text.data}")
 
 def main(args=None):
     rclpy.init(args=args)

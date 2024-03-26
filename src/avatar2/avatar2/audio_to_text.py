@@ -28,18 +28,21 @@ class Audio2TextNode(Node):
 
         self.create_service(Listen, self._listen, self._listener_callback)
         self._listening = True
+        self._listening_time = self.get_clock().now().nanoseconds
+        self.get_logger().info(f"{self.get_name()} Time {self._listening_time}")
 
     def _listener_callback(self, msg, resp):
         """Deal with service call to set listening status"""
+        self.get_logger().info(f"{self.get_name()} **************************************")
         self.get_logger().info(f"{self.get_name()} Setting listening status to {msg.listen}")
+        self.get_logger().info(f"{self.get_name()} **************************************")
+        if msg.listen:
+            self._listening_time = self.get_clock().now().nanoseconds
         self._listening = msg.listen
         resp.status = self._listening
         return resp
 
     def _callback(self, data):
-        if not self._listening:
-            self.get_logger().info(f"{self.get_name()} Sorry, not listening")
-            return
 
         fd, path = tempfile.mkstemp(suffix=".wav")
         with os.fdopen(fd, 'wb') as f:
@@ -47,6 +50,15 @@ class Audio2TextNode(Node):
         result = self._model.transcribe(path, fp16=False)
         os.remove(path)
 
+        if (not self._listening) or (self.get_clock().now().nanoseconds < self._listening_time + 4 * 1e9):
+            self.get_logger().info(f"{self.get_name()} **************************************")
+            self.get_logger().info(f"{self.get_name()} Sorry, not listening to message sequence number {data.seq} {result['text']}")
+            self.get_logger().info(f"{self.get_name()} {self.get_clock().now().nanoseconds} {self._listening_time}")
+            self.get_logger().info(f"{self.get_name()} **************************************")
+            return
+        self.get_logger().info(f"{self.get_name()} **************************************")
+        self.get_logger().info(f"{self.get_name()} Listening to message sequence number {data.seq} {result['text']}")
+        self.get_logger().info(f"{self.get_name()} **************************************")
         tagged_string = TaggedString()
         tagged_string.header.stamp = self.get_clock().now().to_msg()
         tagged_string.audio_sequence_number = data.seq
