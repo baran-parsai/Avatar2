@@ -4,25 +4,28 @@ using ROSBridgeLib.std_msgs;
 
 
 /**
- * Define an AudioInput message
+ * Define an Audio message
  * Version History
  *
+ *  V1.1 - merger of audio input and audio output messages and inclusion of format
  *  V1.0 - hand crafted from the ros2 message
  * 
  */
 
 namespace ROSBridgeLib {
 	namespace avatar_msgs {
-		public class AudioInputMsg : ROSBridgeMsg {
+		public class AudioMsg : ROSBridgeMsg {
 			private int _seq;
 			private string _audio;
+			private string _format;
 			private HeaderMsg _header;
 
-			public AudioInputMsg(JSONNode msg) {
+			public AudioMsg(JSONNode msg) {
 				Debug.Log("Audio Input message being parsed");
 				_header = new HeaderMsg(msg["header"]);
 				_seq = msg["seq"].AsInt;
 				_audio = msg["audio"];
+				_format = msg["format"];
 				Debug.Log("All done");
 			}
 
@@ -32,9 +35,10 @@ namespace ROSBridgeLib {
 			}
 
 			
-			public AudioInputMsg(HeaderMsg header, int seq, string audio) {
+			public AudioMsg(HeaderMsg header, int seq, string format, string audio) {
 				_seq = seq;
 				_header = header;
+				_format = format;
 				_audio = audio;
 			}
 			
@@ -52,12 +56,17 @@ namespace ROSBridgeLib {
 				return _audio;
 			}
 
+			public string GetFormat()
+            {
+				return _format;
+            }
+
 			public override string ToString() {
-				return "avatar2_interfaces/AudioInput[header=" + _header + ",  seq=" + _seq + ", aduio=" + _audio + "]";
+				return "avatar2_interfaces/AudioInput[header=" + _header + ",  seq=" + _seq + ", aduio=" + _audio + ", format=" + _format + "]";
 			}
 
 			public override string ToYAMLString() {
-				return "{\"header\" : " + _header + ", \"seq\" : " + _seq + ", \"audio\" : " + _audio + "}";
+				return "{\"header\" : " + _header + ", \"seq\" : " + _seq + ", \"format\" : " + _format +  ", \"audio\" : " + _audio + "}";
 			}
 
 		}
