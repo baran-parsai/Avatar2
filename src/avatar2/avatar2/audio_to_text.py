@@ -33,9 +33,7 @@ class Audio2TextNode(Node):
 
     def _listener_callback(self, msg, resp):
         """Deal with service call to set listening status"""
-        self.get_logger().info(f"{self.get_name()} **************************************")
         self.get_logger().info(f"{self.get_name()} Setting listening status to {msg.listen}")
-        self.get_logger().info(f"{self.get_name()} **************************************")
         if msg.listen:
             self._listening_time = self.get_clock().now().nanoseconds
         self._listening = msg.listen
@@ -51,14 +49,9 @@ class Audio2TextNode(Node):
         os.remove(path)
 
         if (not self._listening) or (self.get_clock().now().nanoseconds < self._listening_time + 4 * 1e9):
-            self.get_logger().info(f"{self.get_name()} **************************************")
-            self.get_logger().info(f"{self.get_name()} Sorry, not listening to message sequence number {data.seq} {result['text']}")
-            self.get_logger().info(f"{self.get_name()} {self.get_clock().now().nanoseconds} {self._listening_time}")
-            self.get_logger().info(f"{self.get_name()} **************************************")
+            self.get_logger().info(f"{self.get_name()} Not listening to message sequence number {data.seq} |{result['text']}|")
             return
-        self.get_logger().info(f"{self.get_name()} **************************************")
-        self.get_logger().info(f"{self.get_name()} Listening to message sequence number {data.seq} {result['text']}")
-        self.get_logger().info(f"{self.get_name()} **************************************")
+        self.get_logger().info(f"{self.get_name()} Listening to message sequence number {data.seq} |{result['text']}|")
         tagged_string = TaggedString()
         tagged_string.header.stamp = self.get_clock().now().to_msg()
         tagged_string.audio_sequence_number = data.seq

@@ -3,6 +3,7 @@ from rclpy.node import Node
 from avatar2_interfaces.msg import TaggedString
 from rclpy.qos import QoSProfile
 from .llm import LLM
+from .llm_dummy import LLMDummy
 import os
 
 
@@ -21,7 +22,7 @@ class LLMEngine(Node):
         self.declare_parameter('in_topic', '/avatar2/in_message')
         inTopic = self.get_parameter('in_topic').get_parameter_value().string_value
 
-        self._llm = LLM()
+        self._llm = LLMDummy()
 
 
         self.create_subscription(TaggedString, inTopic, self._callback, QoSProfile(depth=1))
@@ -35,7 +36,9 @@ class LLMEngine(Node):
         tagged_string = TaggedString()
         tagged_string.header.stamp = self.get_clock().now().to_msg()
         tagged_string.audio_sequence_number = msg.audio_sequence_number
-        tagged_string.text.data = self._llm.response(msg.text.data)
+        tagged_string.text.data = "hello nurse"
+        z = self._llm.response(text=msg.text.data)
+        tagged_string.text.data = str(z)
         self._publisher.publish(tagged_string)
         self.get_logger().info(f"{self.get_name()} published {msg.text.data}")
 
