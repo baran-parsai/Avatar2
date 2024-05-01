@@ -12,8 +12,9 @@ parser = argparse.ArgumentParser(description='Build vector store for a llm')
 parser.add_argument('text', nargs='*')
 parser.add_argument('--verbose', action='store_true', default=False)
 parser.add_argument('--output', default='vectorstore.pkl', help='output vector store filename')
+parser.add_argument('--chunk_size', default=500, type=int, help='chunk size')
+parser.add_argument('--chunk_overlap', default=20, type=int, help='chunk overlap')
 args = parser.parse_args()
-print(args.output)
 
 # Load Data
 docs = args.text
@@ -23,7 +24,7 @@ for doc in docs:
         print(f"Loading document {doc}")
     loader = TextLoader(doc)
     all_docs.extend(loader.load())
-text_splitter = CharacterTextSplitter(chunk_size=500, separator="\n\n", is_separator_regex=False, length_function=len, chunk_overlap=20)
+text_splitter = CharacterTextSplitter(chunk_size=args.chunk_size, separator="\n\n", is_separator_regex=False, length_function=len, chunk_overlap=args.chunk_overlap)
 documents = text_splitter.split_documents(all_docs)
 
 # Load Data to vectorstore

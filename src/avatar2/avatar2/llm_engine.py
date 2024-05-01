@@ -57,8 +57,6 @@ class LLMEngine(Node):
         prompt, z = self._llm.response(text=msg.text.data)
         tagged_string.text.data = str(z)
         self._publisher.publish(tagged_string)
-        self.get_logger().info(f"{self.get_name()} queried {prompt}")
-        self.get_logger().info(f"{self.get_name()} published {msg.text.data}")
 
 def main(args=None):
     rclpy.init(args=args)
