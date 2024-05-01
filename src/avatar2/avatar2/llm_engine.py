@@ -4,16 +4,10 @@ from avatar2_interfaces.msg import TaggedString
 from rclpy.qos import QoSProfile
 from .llm import LLM
 from .llm_dummy import LLMDummy
+from .llm_langchain import LLMLangChain
 import os
 
 
-#class LLM:
-#    def __init__(self):
-#        print("LLM class created")
-#
-#    def response(self, s):
-#        return "My response is " + str(s)
-#
 class LLMEngine(Node):
     def __init__(self):
         super().__init__('llm_engine_node')
@@ -21,9 +15,18 @@ class LLMEngine(Node):
         outTopic = self.get_parameter('out_topic').get_parameter_value().string_value
         self.declare_parameter('in_topic', '/avatar2/in_message')
         inTopic = self.get_parameter('in_topic').get_parameter_value().string_value
+        
+        self.declare_parameter('avatar', 'dummy')
+        avatar_type = self.get_parameter('avatar').get_parameter_value().string_value
 
-        self._llm = LLMDummy()
-
+        self.get_logger().info(f'{self.get_name()} Firing up an avatar of type {avatar_type}')
+        if avatar_type == 'dummy':
+            self._llm = LLMDummy()
+        elif avatar_type == 'langchain':
+            self._llm = LLMLangChain()
+        else:
+            self.get_logger().info(f'{self.get_name()} {avatar_type} not known, using dummy')
+            self._llm = LLMDummy()
 
         self.create_subscription(TaggedString, inTopic, self._callback, QoSProfile(depth=1))
         self._publisher = self.create_publisher(TaggedString, outTopic, QoSProfile(depth=1))

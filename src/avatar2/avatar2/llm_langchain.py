@@ -1,6 +1,4 @@
-###
-### Not yet complete
-###
+# Provide a generic wrapper for simple langchain LLM interface with a promp and a vectorstore.
 from langchain.prompts.prompt import PromptTemplate
 from langchain_community.llms import LlamaCpp
 from .llm import LLM
@@ -8,20 +6,20 @@ import pickle
 import time
 
 class LLMLangChain(LLM):
-    def __init__(self, model, prompt, vectorstore_name):
+    def __init__(self, model, prompt, format, vectorstore_name, max_vectors=2, n_ctx=2048, temperature=0, verbose=False, n_gpu_layers=-1):
         with open(vectorstore_name, "rb") as f:
             self.vectorstore = pickle.load(f)
-        self.llm = LlamaCpp(model_path=model, temperature=0, n_ctx=2048, verbose=False,  n_gpu_layers=-1)
+        self._llm = LlamaCpp(model_path=model, temperature=temperature, n_ctx=n_ctx, verbose=verbose,  n_gpu_layers=n_gpu_layers)
+        self._prompt = prompt
+        self._format = format
 
-    def response(self, text):
-        docs = self.vectorstore.as_retriever(search_kwargs={"k":2}).get_relevant_documents(query=text)
-        prompt = """You are an assistant at the Ontario Regiment Museum in Oshawa Ontario. 
-           If you don't know the answer, just say "I'm not sure." Don't try to make up an answer.
-           Your name is Mary. Use the following pieces of context to answer the user's question. """
+    def response(self, question):
+        docs = self.vectorstore.as_retriever(search_kwargs={"k":max_vectors}).get_relevant_documents(query=text)
 
+        prompt = self._prompt
         for doc in docs:
             prompt = prompt + "\n" + doc.page_content
-        prompt = prompt + f"\n### USER: {question}\n### ASSISTANT:"
+        prompt = prompt + self._format.format(question=question)
     
         resp = llm(prompt)
-        return resp
+        return prompt, resp
