@@ -6,4 +6,4 @@ class LLMDummy(LLM):
 
     def response(self, text):
         print(f"returning My response is {str(text)}")
-        return "My response is " + str(text)
+        return str(text), "My response is " + str(text)

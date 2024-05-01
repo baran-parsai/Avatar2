@@ -1,0 +1,7 @@
+Download from huggingface a copy of WizardLM-7B-uncensored.Q4_K_M.gguf and put it here
+
+The text directory contains all of the text files to be integrated into the vectorstore
+using the tool found in the tools directory
+
+
+

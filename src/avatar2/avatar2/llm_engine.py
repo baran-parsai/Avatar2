@@ -23,7 +23,22 @@ class LLMEngine(Node):
         if avatar_type == 'dummy':
             self._llm = LLMDummy()
         elif avatar_type == 'langchain':
-            self._llm = LLMLangChain()
+            self.declare_parameter('root', './museum/')
+            root = self.get_parameter('root').get_parameter_value().string_value
+
+            self.declare_parameter('model', 'some.gguf')
+            model = root + self.get_parameter('model').get_parameter_value().string_value
+
+            self.declare_parameter('prompt', 'You are an AI assistant. Answer questions.')
+            prompt = self.get_parameter('prompt').get_parameter_value().string_value
+
+            self.declare_parameter('vectorstore', 'vectorstore.pkl')
+            vectorstore = root + self.get_parameter('vectorstore').get_parameter_value().string_value
+
+            self.declare_parameter('format', '\n###USER: {question}\n###ASSISTANT:')
+            format = self.get_parameter('format').get_parameter_value().string_value
+
+            self._llm = LLMLangChain(model=model, prompt=prompt, vectorstore=vectorstore, format=format)
         else:
             self.get_logger().info(f'{self.get_name()} {avatar_type} not known, using dummy')
             self._llm = LLMDummy()
@@ -39,10 +54,10 @@ class LLMEngine(Node):
         tagged_string = TaggedString()
         tagged_string.header.stamp = self.get_clock().now().to_msg()
         tagged_string.audio_sequence_number = msg.audio_sequence_number
-        tagged_string.text.data = "hello nurse"
-        z = self._llm.response(text=msg.text.data)
+        prompt, z = self._llm.response(text=msg.text.data)
         tagged_string.text.data = str(z)
         self._publisher.publish(tagged_string)
+        self.get_logger().info(f"{self.get_name()} queried {prompt}")
         self.get_logger().info(f"{self.get_name()} published {msg.text.data}")
 
 def main(args=None):
