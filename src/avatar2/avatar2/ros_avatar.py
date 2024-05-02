@@ -4,6 +4,8 @@ from avatar2_interfaces.msg import Audio
 from avatar2_interfaces.srv import Listen
 import simpleaudio as sa
 import cv2
+import time
+import math
 
 class ROSAvatar(Node):
     def __init__(self):
@@ -55,7 +57,10 @@ class ROSAvatar(Node):
             cv2.imshow('Avatar', self._im_sleep[self._frameid])
             self.get_logger().info(f'{self.get_name()} Not playing')
         else:
-            cv2.imshow('Avatar', self._im_talk[self._frameid])
+            t = time.time() - self._playtime
+            alpha = 0.5 * (1 - math.cos(t * 2 * math.pi / 2))
+            mix = cv2.addWeighted(self._im_talk[self._frameid], alpha, self._im_sleep[self._frameid], 1-alpha, 0)
+            cv2.imshow('Avatar', mix)
             self.get_logger().info(f'{self.get_name()} playing')
         cv2.waitKey(1)
 
@@ -76,6 +81,7 @@ class ROSAvatar(Node):
         self._req.listen = False
         self._cli.call_async(self._req)  # ignore return value
         self._play = sound.play()
+        self._playtime = time.time()
         
 
 
