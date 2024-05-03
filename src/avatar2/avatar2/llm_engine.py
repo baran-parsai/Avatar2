@@ -5,6 +5,7 @@ from rclpy.qos import QoSProfile
 from .llm import LLM
 from .llm_dummy import LLMDummy
 from .llm_langchain import LLMLangChain
+from .llm_withfaces import LLMWithFaces
 import os
 
 
@@ -39,6 +40,23 @@ class LLMEngine(Node):
             format = self.get_parameter('format').get_parameter_value().string_value
 
             self._llm = LLMLangChain(model=model, prompt=prompt, vectorstore=vectorstore, format=format)
+        elif avatar_type == 'faces':
+            self.declare_parameter('root', './museum/')
+            root = self.get_parameter('root').get_parameter_value().string_value
+
+            self.declare_parameter('model', 'some.gguf')
+            model = root + self.get_parameter('model').get_parameter_value().string_value
+
+            self.declare_parameter('prompt', 'You are an AI assistant. Answer questions.')
+            prompt = self.get_parameter('prompt').get_parameter_value().string_value
+
+            self.declare_parameter('vectorstore', 'vectorstore.pkl')
+            vectorstore = root + self.get_parameter('vectorstore').get_parameter_value().string_value
+
+            self.declare_parameter('format', '\n###USER: {question}\n###ASSISTANT:')
+            format = self.get_parameter('format').get_parameter_value().string_value
+
+            self._llm = LLMWithFaces(model=model, prompt=prompt, vectorstore=vectorstore, format=format, node=self)
         else:
             self.get_logger().info(f'{self.get_name()} {avatar_type} not known, using dummy')
             self._llm = LLMDummy()
