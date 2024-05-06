@@ -20,6 +20,7 @@ def generate_launch_description():
              executable='head_info',
              name='head_info',
              output='screen',
-             namespace="/avatar2"),
+             namespace="/avatar2",
+             parameters=[{'device': '0'}])
     ])
 

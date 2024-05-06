@@ -15,6 +15,8 @@ class LLMLangChain(LLM):
         self._max_vectors = max_vectors
 
     def response(self, text):
+        if len(text) < 10:
+            return
         docs = self.vectorstore.as_retriever(search_kwargs={"k" : self._max_vectors}).get_relevant_documents(query=text)
 
         prompt = self._prompt
