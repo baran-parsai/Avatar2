@@ -1,3 +1,4 @@
+import sys
 import os
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
@@ -7,7 +8,15 @@ from launch.substitutions import LaunchConfiguration
 from launch_ros.actions import Node
 
 def generate_launch_description():
-    imagery= '/home/jenkin/Documents/avatar/Avatar2/ros_avatar'   # where the imagery lives
+    imagery = '/home/jenkin/Documents/avatar/Avatar2/ros_avatar'   # default imagery location
+    for arg in sys.argv: # there must be a better way...
+        if arg.startswith('imagery:='):
+           print(arg.split('imagery:=', 1)[1])
+           imagery = arg.split('imagery:=', 1)[1]
+        elif ':=' in arg:
+           print(f"Unknown argument in {arg}. Usage ros2 launch ros_avatar.launch.py [imagery:=path_to_imagery]")
+           sys.exit(0)
+    print(f"Launching ros_avatar.launch using imagery from {imagery}")
 
     return LaunchDescription([
         Node(
