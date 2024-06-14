@@ -6,6 +6,7 @@ import datetime
 import numpy as np
 import math
 import json
+from pathlib import Path
 from cv_bridge import CvBridge
 from rclpy.node import Node
 from std_srvs.srv import SetBool
@@ -20,6 +21,7 @@ from .FaceRecognizer import FaceRecognizer
 
 
 class Recognizer(Node):
+    DEFAULT_ROOT = "/home/jenkin/Documents/Avatar2/people"
     def __init__(self):
         super().__init__('recognizer_node')
         self.get_logger().info(f'{self.get_name()} node created')
@@ -30,11 +32,16 @@ class Recognizer(Node):
         self.declare_parameter('topic', '/avatar2/speaker_info')
         self._topic = self.get_parameter('topic').get_parameter_value().string_value
 
-
         self.declare_parameter("camera_topic", "/mycamera/image_raw")
         self._camera_topic = self.get_parameter("camera_topic").get_parameter_value().string_value
-        
-        self._move_flag = False
+
+        self.declare_parameter("root_dir", Recognizer.DEFAULT_ROOT)
+        root = self.get_parameter("root_dir").get_parameter_value().string_value
+        self.get_logger().info(f'{self.get_name()} root is {root}')
+
+        encodings = Path(os.path.join(root, "faces.pkl"))
+        database = Path(os.path.join(root, "faces.json"))
+    
         self._bridge = CvBridge()
 
         # subs
@@ -43,7 +50,7 @@ class Recognizer(Node):
         # pubs
         self._publisher = self.create_publisher(SpeakerInfo, self._topic, QoSProfile(depth=1))
 
-        self._face_recognizer = FaceRecognizer()
+        self._face_recognizer = FaceRecognizer(encodings=encodings, database=database)
         self._face_recognizer.load_encodings()
         
     
