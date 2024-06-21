@@ -12,12 +12,13 @@ from launch.substitutions import LaunchConfiguration
 from launch_ros.actions import Node
 
 def generate_launch_description():
-    root = "/home/baranparsai/Documents/Avatar2/models/museum/"  # NB: need trailing slash
+    root = "/home/baranparsai/Documents/Avatar2/models/hearing_clinic/"  # NB: need trailing slash
     model = "WizardLM-7B-uncensored.Q4_K_M.gguf"
     format = "\n### USER: {question}\n### ASSISTANT:"
-    vectorstore = "museum.pkl"
+    vectorstore = "hearing.pkl"
+    test_cache = "test_cache.json"
 
-    prompt = """You are an assistant at the Ontario Regiment Museum in Oshawa Ontario. 
+    prompt = """You are a helpful assistant at the Exquisite Hearing Clinic.
            If you don't know the answer, just say "I'm not sure." Don't try to make up an answer.
            Your name is Mary. Use the following pieces of context to answer the user's question. """
     return LaunchDescription([
@@ -28,11 +29,12 @@ def generate_launch_description():
              name='llm_engine',
              output='screen',
              namespace="/avatar2",
-             parameters=[{'avatar' : 'langchain',
+             parameters=[{'avatar' : 'faces',
                           'root' : root,
                           'model' : model,
                           'format' : format,
                           'vectorstore' : vectorstore,
-                          'prompt' : prompt}])
+                          'prompt' : prompt, 
+                          'test_cache' : test_cache}])
     ])
 

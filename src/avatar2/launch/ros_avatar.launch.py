@@ -8,7 +8,7 @@ from launch.substitutions import LaunchConfiguration
 from launch_ros.actions import Node
 
 def generate_launch_description():
-    imagery = '/home/jenkin/Documents/avatar/Avatar2/ros_avatar'   # default imagery location
+    imagery = '/home/baranparsai/Documents/Avatar2/ros_avatar'   # default imagery location
     for arg in sys.argv: # there must be a better way...
         if arg.startswith('imagery:='):
            print(arg.split('imagery:=', 1)[1])

@@ -12,7 +12,7 @@ from launch.substitutions import LaunchConfiguration
 from launch_ros.actions import Node
 
 def generate_launch_description():
-    root = "/home/jenkin/Documents/avatar/Avatar2/models/museum/"  # NB: need trailing slash
+    root = "/home/baranparsai/Documents/Avatar2/models/museum/"  # NB: need trailing slash
     model = "WizardLM-7B-uncensored.Q4_K_M.gguf"
     format = "\n### USER: {question}\n### ASSISTANT:"
     vectorstore = "museum.pkl"
