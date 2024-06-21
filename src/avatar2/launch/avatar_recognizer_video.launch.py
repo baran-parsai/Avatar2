@@ -17,7 +17,7 @@ from launch_ros.actions import Node
 
 
 def generate_launch_description():
-    root_dir = '/home/jenkin/Documents/avatar/Avatar2/scenarios/hearingaid/faces'
+    root_dir = '/home/baranparsai/Documents/Avatar2/scenarios/hearing_clinic/faces'
 
     for arg in sys.argv[4:]:
         if arg.startswith('root:='):

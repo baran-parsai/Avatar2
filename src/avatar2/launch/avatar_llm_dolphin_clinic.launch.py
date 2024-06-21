@@ -13,7 +13,7 @@ from launch_ros.actions import Node
 
 
 def generate_launch_description():
-    root = "/home/jenkin/Documents/avatar/Avatar2/models/hearing_clinic/"  # NB: need trailing slash
+    root = "/home/baranparsai/Documents//Avatar2/models/hearing_clinic/"  # NB: need trailing slash
     model = "dolphin-2.1-mistral-7b.Q5_K_S.gguf"
     format = "<|im_end|>\n<|im_start|>user\n{question}<|im_end|>\n<|im_start|>assistant"
     vectorstore = "hearing.pkl"
