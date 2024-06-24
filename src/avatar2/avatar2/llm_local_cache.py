@@ -88,19 +88,6 @@ class LocalCache():
             self.cache_map[query_normalized] = (response, response_time, 0)
             self._node.get_logger().info(f"{self._node.get_name()} Added {query_normalized} to cache with response time {response_time}")
             heapq.heappush(self.cache, (0, response_time, query_normalized))
-    
-    # def _update_heap(self, query):
-    #     if query in self._heap_map:
-    #         entry = self._heap_map[query]
-    #         self._heap.remove(entry)
-    #         heapq.heapify(self._heap)
-    #     self._add_to_heap(query)
-            
-    # def _add_to_heap(self, query):
-    #     self._counter += 1
-    #     entry = (self._counter, query)
-    #     heapq.heappush(self._heap, entry)
-    #     self._heap_map[query] = entry
         
     def _evict_cache(self):
         while self._heap:
