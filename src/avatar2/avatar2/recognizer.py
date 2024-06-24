@@ -23,12 +23,16 @@ from .FaceRecognizer import FaceRecognizer
 
 
 class Recognizer(Node):
-    DEFAULT_ROOT = "/home/baranparsai/Documents/Avatar2/people"
+    DEFAULT_ROOT = "/home/baranparsai/Documents/Avatar2/scenarios/hearing_clinic/faces"
     def __init__(self):
         super().__init__('recognizer_node')
         self.get_logger().info(f'{self.get_name()} node created')
 
+
         # params
+        self.declare_parameter('debug', False)
+        self._debug = self.get_parameter('debug').get_parameter_value().bool_value
+        self.get_logger().info(f'{self.get_name()} node created, debug is {self._debug}')
 
         self._msg_id = 0
         self.declare_parameter('topic', '/avatar2/speaker_info')
@@ -39,7 +43,8 @@ class Recognizer(Node):
 
         self.declare_parameter("root_dir", Recognizer.DEFAULT_ROOT)
         root = self.get_parameter("root_dir").get_parameter_value().string_value
-        self.get_logger().info(f'{self.get_name()} root is {root}')
+        if self._debug:
+            self.get_logger().info(f'{self.get_name()} root is {root}')
 
         encodings = Path(os.path.join(root, "faces.pkl"))
         database = Path(os.path.join(root, "faces.json"))
@@ -57,24 +62,17 @@ class Recognizer(Node):
         
     
     def _camera_callback(self, data):
-#        self.get_logger().info(f'{self.get_name()} camera callback')
-#        self.get_logger().info(f'{self.get_name()} camera callback')
         img = self._bridge.imgmsg_to_cv2(data)
 
         bb, name, middle_row, middle_col = self._face_recognizer.recognize_faces(img)
-        self.get_logger().info(f'{self.get_name()} bounding_box {bb} name is {name}')
+        if self._debug:
+            self.get_logger().info(f'{self.get_name()} bounding_box {bb} name is {name}')
+
         if bb is not None:
             sub = img[bb[0]:bb[2], bb[3]:bb[1],:]
-            cv2.imshow('face', sub)
-            cv2.waitKey(3)
-
-
-        bb, name, middle_row, middle_col = self._face_recognizer.recognize_faces(img)
-        self.get_logger().info(f'{self.get_name()} bounding_box {bb} name is {name}')
-        if bb is not None:
-            sub = img[bb[0]:bb[2], bb[3]:bb[1],:]
-            cv2.imshow('face', sub)
-            cv2.waitKey(3)
+            if self._debug:
+                cv2.imshow('face', sub)
+                cv2.waitKey(3)
 
 
         sp = SpeakerInfo()
