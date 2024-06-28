@@ -36,6 +36,7 @@ setup(
             'text_to_sound = avatar2.text_to_audio:main',
             'play_text = avatar2.play_text:main',
             'play_text_syncd = avatar2.play_text_syncd:main',
+            'play_audio_syncd = avatar2.play_audio_syncd:main',
             'llm_engine = avatar2.llm_engine:main',
             'ros_avatar = avatar2.ros_avatar:main',
         ],
