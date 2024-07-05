@@ -26,6 +26,10 @@ def generate_launch_description():
              namespace="/avatar2")]
 
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 869f8c6687afe53d29982b712565a199564a474e
     #avatar_microphone.launch.py
     microphone_node = Node(
              package='avatar2',
@@ -35,6 +39,10 @@ def generate_launch_description():
              namespace="/avatar2",
              parameters=[{'non_speaking_duration': 1.0, 'pause_threshold': 1.0}])
     
+<<<<<<< HEAD
+=======
+    
+>>>>>>> 869f8c6687afe53d29982b712565a199564a474e
 
     #avatar_recognizer_video.launch.py
     root_dir = '/home/baranparsai/Documents/Avatar2/scenarios/hearing_clinic/faces'
@@ -68,6 +76,28 @@ def generate_launch_description():
             parameters=[{'root_dir' : root_dir, 'debug': debug}])]
         
 
+<<<<<<< HEAD
+=======
+
+    #avatar_video.launch.py
+    video_node = [
+        Node(
+             package='avatar2',
+             executable='avatar_camera',
+             name='avatar_camera',
+             output='screen',
+             namespace="/avatar2"),
+        Node(
+             package='avatar2',
+             executable='head_info',
+             name='head_info',
+             output='screen',
+             namespace="/avatar2",
+             parameters=[{'device': '0'}])]
+    
+
+
+>>>>>>> 869f8c6687afe53d29982b712565a199564a474e
     #ros_avatar.launch.py
     imagery = '/home/baranparsai/Documents/Avatar2/ros_avatar'   # default imagery location
     for arg in sys.argv[4:]: # there must be a better way...
@@ -88,21 +118,48 @@ def generate_launch_description():
     
 
     #avatar_llm_wizard_clinic.launch.py
+<<<<<<< HEAD
     config_file = '/home/baranparsai/Documents/Avatar2/config.json'  # Update with your actual config file path
+=======
+    root = "/home/baranparsai/Documents/Avatar2/models/hearing_clinic/"  # NB: need trailing slash
+    model = "WizardLM-7B-uncensored.Q4_K_M.gguf"
+    format = "\n### Input: {question}\n### Response:"
+    vectorstore = "hearing.pkl"
+    test_cache = "test_cache.json"
+
+    prompt = """You are a helpful assistant at the Exquisite Hearing Clinic.
+           If you don't know the answer, just say "I'm not sure." Don't try to make up an answer.
+           Your name is Mary. Use the following pieces of context to answer the user's question. """
+    
+>>>>>>> 869f8c6687afe53d29982b712565a199564a474e
     llm_wizard_clinic_node = Node(
              package='avatar2',
              executable='llm_engine',
              name='llm_engine',
              output='screen',
              namespace="/avatar2",
+<<<<<<< HEAD
              parameters=[{'config_file': config_file}])
+=======
+             parameters=[{'avatar' : 'faces',
+                          'root' : root,
+                          'model' : model,
+                          'format' : format,
+                          'vectorstore' : vectorstore,
+                          'prompt' : prompt, 
+                          'test_cache' : test_cache}])
+>>>>>>> 869f8c6687afe53d29982b712565a199564a474e
 
 
     return LaunchDescription([
         *audio_node,
         microphone_node,
         *recognizer_video_node,
+<<<<<<< HEAD
         #*video_node,
+=======
+        *video_node,
+>>>>>>> 869f8c6687afe53d29982b712565a199564a474e
         ros_node,
         llm_wizard_clinic_node
         ])
