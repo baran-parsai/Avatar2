@@ -6,7 +6,8 @@ class AvatarHandler(py_trees.behaviour.Behaviour):
     def __init__(self, name):
         super(AvatarHandler, self).__init__(name)
 
-    def setup(self, node='eh'):
+    def setup(self, **kwargs):
+        #kwargs['node'] is our node (ignored here)
         self.logger.debug(f"  {self.name} [NormalHandler:setup()]")
 
     def initialise(self):
