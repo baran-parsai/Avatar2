@@ -52,11 +52,12 @@ def main(args=None):
     node = AudioInputWavNode()
     try:
         rclpy.spin(node)
+        node.destroy_node()
+        rclpy.shutdown()
     except KeyboardInterrupt:
         pass
 
-    node.destroy_node()
-    rclpy.shutdown()
+
 
 if __name__ == '__main__':
     main()

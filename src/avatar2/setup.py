@@ -30,7 +30,6 @@ setup(
             'sound_to_text = avatar2.audio_to_text:main',
             'avatar_camera = avatar2.opencv_camera:main',
             'sentiment_analysis = avatar2.sentiment_analysis:main',
-            'head_info = avatar2.yolo_head:main',
             'head_detect = avatar2.recognizer:main',
             'view_head_info = avatar2.view_face:main',
             'text_to_sound = avatar2.text_to_audio:main',

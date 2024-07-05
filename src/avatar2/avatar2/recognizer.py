@@ -75,20 +75,18 @@ class Recognizer(Node):
                 cv2.waitKey(3)
 
 
-        sp = SpeakerInfo()
-        sp.header.stamp = self.get_clock().now().to_msg()
-        sp.seq = self._msg_id
-        self._msg_id = self._msg_id + 1
-        sp.row = middle_row
-        sp.col = middle_col
-        sp.row = middle_row
-        sp.col = middle_col
-        sp.face = self._bridge.cv2_to_imgmsg(img, "bgr8")
-        sp.info = String()
-        sp.info.data = json.dumps(name)
-        sp.info = String()
-        sp.info.data = json.dumps(name)
-        self._publisher.publish(sp)
+            sp = SpeakerInfo()
+            sp.header.stamp = self.get_clock().now().to_msg()
+            sp.seq = self._msg_id
+            self._msg_id = self._msg_id + 1
+            sp.row = float(middle_row) / float(img.shape[0])
+            sp.col = float(middle_col) / float(img.shape[1])
+            sp.width = float(sub.shape[1]) / float(img.shape[1])
+            sp.height = float(sub.shape[0]) / float(img.shape[0])
+            sp.face = self._bridge.cv2_to_imgmsg(img, "bgr8")
+            sp.info = String()
+            sp.info.data = json.dumps(name)
+            self._publisher.publish(sp)
     
 def main(args=None):
     rclpy.init(args=args)

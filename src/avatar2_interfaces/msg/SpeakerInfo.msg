@@ -4,4 +4,6 @@ uint32 seq                            # sequence number
 sensor_msgs/Image  face               # face image
 float32 row                           # row in range 0..1 
 float32 col                           # col in range 0..1
+float32 width			      # width of bounding box in range 0..1
+float32 height                        # height of bounding box in range 0..1
 std_msgs/String info                  # a string holding a json dictionary

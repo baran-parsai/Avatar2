@@ -4,17 +4,19 @@
 # Very few formats are supported
 #
 # Version History
-#
+# V3.1 added sound device
 # V3.0 renamed default topics and added support for the audio format
 # V2.0 general software refactoring
 # V1.0 initial version from the old Avatar code
 #
 #
 import rclpy
+import rclpy.logging
 from rclpy.node import Node
 import speech_recognition as sr
 from rclpy.qos import QoSProfile
 from avatar2_interfaces.msg import Audio
+import sounddevice
 
 class ProcessAudioNode(Node):
     def __init__(self):
@@ -78,10 +80,9 @@ def main(args=None):
     try:
         node = ProcessAudioNode()
         node.destroy_node()
+        rclpy.shutdown()
     except KeyboardInterrupt:
         pass
-
-    rclpy.shutdown()
 
 if __name__ == '__main__':
     main()

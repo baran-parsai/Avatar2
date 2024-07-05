@@ -26,7 +26,7 @@ class LocalCache():
             for key in self.permanent_entries:
                 key_normalized = key.lower().strip().translate(str.maketrans('', '', string.punctuation))
                 if key_normalized not in self.cache_map:
-                    timestamp = self._current_time()
+                    timestamp = 1 #self._current_time()
                     self.cache_map[key_normalized] = (f"Default response for {key_normalized}", timestamp, 0)
                     heapq.heappush(self.cache, (0, timestamp, key_normalized))
                 else:

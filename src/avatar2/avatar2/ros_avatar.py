@@ -105,10 +105,9 @@ def main(args=None):
     try:
         rclpy.spin(node)
         node.destroy_node()
+        rclpy.shutdown()
     except KeyboardInterrupt:
         pass
-
-    rclpy.shutdown()
 
 if __name__ == '__main__':
     main()
