@@ -13,7 +13,7 @@ setup(
         ('share/' + package_name, ['package.xml']),
         (os.path.join('share', package_name), glob('/classification_model/*')),
         (os.path.join('share', package_name), glob('/classifications/models/*')),
-        (os.path.join('share', package_name), glob('launch/*.py')),
+        (os.path.join('share', package_name), glob('launch/*.launch.py')),
     ],
     install_requires=['setuptools'],
     zip_safe=True,

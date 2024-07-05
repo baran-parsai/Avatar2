@@ -14,7 +14,7 @@ class FaceRecognizer:
     DEFAULT_ENCODINGS_PATH = Path(os.path.join("/home/baranparsai/Documents/Avatar2/scenarios/hearing_clinic/faces", "faces.pkl"))
     PEOPLE_INFO_PATH = Path(os.path.join("/home/baranparsai/Documents/Avatar2/scenarios/hearing_clinic/faces", "faces.json"))
     
-    def __init__(self, encodings=DEFAULT_ENCODINGS_PATH, database = PEOPLE_INFO_PATH, debug = False):
+    def __init__(self, encodings=DEFAULT_ENCODINGS_PATH, database = PEOPLE_INFO_PATH, debug = True):
         self.people_info = []
         self._encodings_location = encodings
         self.load_encodings()
@@ -22,11 +22,11 @@ class FaceRecognizer:
     
         with open(database) as f:
             self._database = json.load(f)
-        self._print(self._database)
+        #self._print(self._database)
 
     def _print(self,s):
         if self._debug:
-            self._print(s)
+            print(s)
 
     def load_encodings(self):
         """Load face encodings from a pickle file."""
@@ -46,7 +46,7 @@ class FaceRecognizer:
         people_info = []
         encodings = []
         json_out = []
-        print(data_loc)
+        #print(data_loc)
 
         for person in Path(data_loc).glob("*"):
             print(person)
@@ -56,7 +56,7 @@ class FaceRecognizer:
 
             for z in Path(person).glob("*.json"):
                 json_file.append(z)
-            print(json_file)
+            #print(json_file)
 
             if len(json_file) != 1 :
                 person_json_path = os.path.join(person, f"{first_name}_{last_name}.json")
@@ -106,23 +106,24 @@ class FaceRecognizer:
         for bounding_box, unknown_encoding in zip(input_face_locations, input_face_encodings):
             top, right, bottom, left = bounding_box
             face_area = (right - left) * (bottom - top)
-            middle_row = (right + left) / 2
-            middle_col = (bottom + top) / 2
+            middle_col = (right + left) / 2
+            middle_row = (bottom + top) / 2
 
             if face_area > largest_face_area:
                 largest_face_area = face_area
                 largest_face_location = bounding_box
 
-        self._print(f"largest box is {largest_face_area}")
+        #self._print(f"largest box is {largest_face_area}")
         id = -1
         name = {'name': 'unknown', 'ID': -1, 'role': 'unknown'}
 
         if largest_face_area > 0:
             id = self._recognize_face(unknown_encoding, self._loaded_encodings)
-            self._print(f"the id is {id}")
+            #self._print(f"the id is {id}")
 
             if id >= 0:
                 name = self._database[id]
+        #self._print(name)
 
         return largest_face_location, name, middle_row, middle_col
 
@@ -140,16 +141,16 @@ class FaceRecognizer:
         
         if votes:
             all_faces = Counter(loaded_encodings["names"])
-            self._print(f"all_faces {all_faces}")
+            #self._print(f"all_faces {all_faces}")
             
             all_faces_l = list(all_faces)
-            self._print(f"all_faces_l {all_faces_l}")
+            #self._print(f"all_faces_l {all_faces_l}")
 
             best_face = all_faces_l[0]
             best_count = -1
 
             for face in all_faces_l:
-                self._print(f"working out face {face} votes {votes[face]} total_faces {all_faces[face]} best_face {best_face}")
+                #self._print(f"working out face {face} votes {votes[face]} total_faces {all_faces[face]} best_face {best_face}")
                 score = float(votes[face]) / float(all_faces[face])
 
                 if score > best_count:
@@ -159,4 +160,3 @@ class FaceRecognizer:
         
         return -1
     
-
