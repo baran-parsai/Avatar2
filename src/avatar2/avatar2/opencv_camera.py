@@ -11,9 +11,9 @@ class OpenCVCamera(Node):
         super().__init__('avatar_camera')
 
         try:
-            self._camera =  cv2.VideoCapture(0, cv2.CAP_V4L2)
+            self._camera =  cv2.VideoCapture(2, cv2.CAP_V4L2)
         except Exception as e:
-            self.get_logger().error(f'Unable to open camera 0')
+            self.get_logger().error(f'Unable to open camera 2')
             sys.exit(1)
 
         self._bridge = CvBridge()
@@ -36,9 +36,9 @@ def main(args=None):
     node = OpenCVCamera()
     try:
         node.stream()
+        rclpy.shutdown()
     except KeyboardInterrupt:
         pass
-    rclpy.shutdown()
 
 if __name__ == '__main__':
     main()

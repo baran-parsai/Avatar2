@@ -25,6 +25,7 @@ class ViewCamera(Node):
         self.get_logger().info(f'{self.get_name()} recovered face {msg.row} {msg.col}')
         face = self._bridge.imgmsg_to_cv2(msg.face, "bgr8")
    
+        self.get_logger().info(f'{self.get_name()} got back an image row {msg.row} col {msg.col} width {msg.width} height {msg.height}')
         cv2.imshow('face', face)
         cv2.waitKey(3)
 
@@ -33,9 +34,9 @@ def main(args=None):
     node = ViewCamera()
     try:
         rclpy.spin(node)
+        rclpy.shutdown()
     except KeyboardInterrupt:
         pass
-    rclpy.shutdown()
 
 if __name__ == '__main__':
     main()
