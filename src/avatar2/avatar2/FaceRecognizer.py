@@ -127,7 +127,10 @@ class FaceRecognizer:
 
         return largest_face_location, name, middle_row, middle_col
 
-
+    def Focal_Length_Finder(measured_distance, real_width, width_in_rf_image): 
+        focal_length = (width_in_rf_image * measured_distance) / real_width
+        return focal_length
+    
     def _recognize_face(self, unknown_encoding, loaded_encodings):
         """Recognize the face by comparing its encoding with loaded encodings.
         return the face with hisghest score or -1"""

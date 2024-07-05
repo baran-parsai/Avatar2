@@ -11,11 +11,11 @@ from launch_ros.actions import Node
 
 def generate_launch_description():
 
-    root_dir = '/home/baranparsai/Documents/Avatar2/scenarios/hearing_clinic/faces'
+    root = '/home/baranparsai/Documents/Avatar2/scenarios/hearing_clinic'   # default location of faces.json, not in config file
     debug = False
     ui_imagery = '/home/baranparsai/Documents/Avatar2/ros_avatar'   # default imagery location
     ros_ui = False
-    config_file = 'config.json'
+    config_file = 'hearing_clinic_config.json'
 
     for arg in sys.argv[4:]:
         if arg.startswith('config_file:='):
@@ -42,10 +42,9 @@ def generate_launch_description():
         pass
     
     try:
-        debug = boot(config['debug'])
+        debug = bool(config['debug'])
     except:
         pass
-    
     
     nodes = []
     microphone_node = Node(
@@ -87,7 +86,7 @@ def generate_launch_description():
             name='head_detect',
             output='screen',
             namespace="/avatar2",
-            parameters=[{'root_dir' : root_dir, 'debug': debug}]) 
+            parameters=[{'root_dir' : root + '/faces', 'debug': debug}]) 
     nodes.append(face_recognizer_node)
         
     llm_wizard_clinic_node = Node(
