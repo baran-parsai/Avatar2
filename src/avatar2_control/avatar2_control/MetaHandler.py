@@ -22,10 +22,10 @@ class MetaHandler(py_trees.behaviour.Behaviour):
         self._sleeping = False
 
     # handlers must return 
-    def _handler_awake(words):
+    def _handler_awake(self, words):
         self.logger.debug(f"  {self.name} [awake handler called]")
 
-    def _handler_sleep(words):
+    def _handler_sleep(self, words):
         self.logger.debug(f"  {self.name} [sleep handler called]")
 
     def setup(self, **kwargs):
@@ -81,7 +81,7 @@ class MetaHandler(py_trees.behaviour.Behaviour):
             key = "".join(words[1:])
             self._node.get_logger().warning(f'We should process this {key}')
             try:
-                self._handlers[key]()
+                self._handlers[key](words)
 #                response = "Meta response to " + in_text
 #                tagged_string = TaggedString()
 #                tagged_string.header.stamp = self._node.get_clock().now().to_msg()
