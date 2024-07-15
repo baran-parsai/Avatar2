@@ -74,20 +74,21 @@ class MetaHandler(py_trees.behaviour.Behaviour):
         words = in_text.split()
         self._node.get_logger().warning(f'text is now {words}')
         if (len(words) > 1) and (words[0] == avatar_name):
-            self._node.get_logger().warning(f'We should process this')
+            key = "".join(words[1:])
+            self._node.get_logger().warning(f'We should process this {key}')
             try:
-                self._handlers.get(words[1])(words)
-                response = "Meta response to " + in_text
-                tagged_string = TaggedString()
-                tagged_string.header.stamp = self._node.get_clock().now().to_msg()
-                tagged_string.audio_sequence_number = sequence
-                tagged_string.text.data = str(response)
-                self._blackboard.out_message = tagged_string
+                self._handlers[key]()
+#                response = "Meta response to " + in_text
+#                tagged_string = TaggedString()
+#                tagged_string.header.stamp = self._node.get_clock().now().to_msg()
+#                tagged_string.audio_sequence_number = sequence
+#                tagged_string.text.data = str(response)
+#                self._blackboard.out_message = tagged_string
 
 
                 return py_trees.common.Status.SUCCESS
             except:
-                self._node.get_logger().warning(f'dont know {words[1]}')
+                self._node.get_logger().warning(f'dont know {key}')
 
 
         return py_trees.common.Status.FAILURE
