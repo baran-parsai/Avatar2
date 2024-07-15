@@ -38,6 +38,7 @@ class MetaHandler(py_trees.behaviour.Behaviour):
         self._blackboard.register_key(key="/in_message.audio_sequence_number", access=py_trees.common.Access.READ)
         self._blackboard.register_key(key="/avatar_name", access=py_trees.common.Access.READ)
         self._blackboard.register_key(key="/out_message", access=py_trees.common.Access.WRITE)
+        self._blackboard.register_key(key="/avatar_sleeping", access=py_trees.common.Access.READ)
 
     def update(self):
         self.logger.debug(f"  {self.name} [MetaHandler:update()]")
@@ -46,10 +47,24 @@ class MetaHandler(py_trees.behaviour.Behaviour):
 
         sequence = self._blackboard.in_message.audio_sequence_number
         in_text = self._blackboard.in_message.text.data.lower()
+        sleep_status = self._blackboard.avatar_sleeping
         
         avatar_name = self._blackboard.avatar_name.lower()
         self._node.get_logger().warning(f'Avatars name is {avatar_name}')
 
+        # if the avatar is sleeping, ignore all commands and return "I am sleeping"
+        if sleep_status:
+            self._node.get_logger().warning(f'avatar is sleeping')
+            # response = "I am sleeping"
+            # tagged_string = TaggedString()
+            # tagged_string.header.stamp = self._node.get_clock().now().to_msg()
+            # tagged_string.audio_sequence_number = sequence
+            # tagged_string.text.data = str(response)
+            # self._blackboard.out_message = tagged_string
+            return py_trees.common.Status.SUCCESS
+        else:
+            self._node.get_logger().warning(f'avatar is awake')
+        
         # if we have processed this sentence, ignore it
         if sequence == self._last_audio_sequence:
             return py_trees.common.Status.SUCCESS
