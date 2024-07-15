@@ -4,8 +4,8 @@ import py_trees_ros.trees
 import py_trees.console as console
 import rclpy
 
-from . import MetaHandler
-from . import AvatarHandler
+from MetaHandler import MetaHandler
+from AvatarHandler import AvatarHandler
 from avatar2_interfaces.msg import TaggedString
 
 
@@ -28,7 +28,7 @@ def controller_create_root() -> py_trees.behaviour.Behaviour:
         topic_type = TaggedString,
         qos_profile = py_trees_ros.utilities.qos_profile_unlatched(),
         blackboard_variable = '/out_message')
-
+    
     # Deal with meta commands to the avatar
     meta = MetaHandler.MetaHandler("meta handler")
 
@@ -74,6 +74,7 @@ def main(args=None):
         console.logerror(console.red + "tree setup interrupted" + console.reset)
         tree.shutdown()
 
+    print("Tree setup complete. Starting tick tock...")
     tree.tick_tock(period_ms = 1000.0)
 
     try:
