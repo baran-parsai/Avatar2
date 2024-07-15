@@ -14,6 +14,8 @@ class MetaHandler(py_trees.behaviour.Behaviour):
         self._handlers = {
             'awake' : self._handler_awake,
             'sleep' : self._handler_sleep
+            'gotosleep' : self._handler_sleep
+            'sleepnow' : self._handler_sleep
         }
         
         self._sleeping = False
