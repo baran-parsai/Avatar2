@@ -4,8 +4,8 @@ import py_trees_ros.trees
 import py_trees.console as console
 import rclpy
 
-from MetaHandler import MetaHandler
-from AvatarHandler import AvatarHandler
+from .MetaHandler import MetaHandler
+from .AvatarHandler import AvatarHandler
 from avatar2_interfaces.msg import TaggedString
 
 
@@ -30,13 +30,13 @@ def controller_create_root() -> py_trees.behaviour.Behaviour:
         blackboard_variable = '/out_message')
     
     # Deal with meta commands to the avatar
-    meta = MetaHandler.MetaHandler("meta handler")
+    meta = MetaHandler("meta handler")
 
     # High to low priority and restart on each tick
     bits = py_trees.composites.Selector(name = "Behaviour types", memory = False)
 
     # Deal with regular avatar commands
-    avatar = AvatarHandler.AvatarHandler("avatar handler")
+    avatar = AvatarHandler("avatar handler")
 
     # an always running behaviour
     idle = py_trees.behaviours.Running(name="Idle")
