@@ -13,5 +13,8 @@
     "cache": "cache.json",
     "camera_topic": "/mycamera/image_raw",
     "face_topic": "/avatar2/speaker_info",
-    "log_dir": "logs"
+    "log_dir": "logs",
+    "focal_length": 615.0,
+    "sensor_height": 3.6,
+    "real_face_width": 160
 }
