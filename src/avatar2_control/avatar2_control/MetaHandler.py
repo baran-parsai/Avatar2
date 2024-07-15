@@ -1,6 +1,7 @@
 import py_trees
 from avatar2_interfaces.msg import TaggedString
 import string
+import re
 
 class MetaHandler(py_trees.behaviour.Behaviour):
     """Handle meta requests to the avatar. Note that this is not intended to replace langchain or similar
@@ -41,6 +42,7 @@ class MetaHandler(py_trees.behaviour.Behaviour):
         self._blackboard.register_key(key="/in_message.text.data", access=py_trees.common.Access.READ)
         self._blackboard.register_key(key="/in_message.audio_sequence_number", access=py_trees.common.Access.READ)
         self._blackboard.register_key(key="/avatar_name", access=py_trees.common.Access.READ)
+        self._blackboard.register_key(key="/avatar_name_pattern", access=py_trees.common.Access.READ)
         self._blackboard.register_key(key="/out_message", access=py_trees.common.Access.WRITE)
 
     def update(self):
@@ -54,6 +56,8 @@ class MetaHandler(py_trees.behaviour.Behaviour):
         
         avatar_name = self._blackboard.avatar_name.lower()
         self._node.get_logger().warning(f'Avatars name is {avatar_name}')
+        avatar_name_pattern = self._blackboard.avatar_name_pattern
+        self._node.get_logger().warning(f'Avatars name pattern is {avatar_name_pattern}')
 
         # if the avatar is sleeping, ignore all commands and return "I am sleeping"
         if self._sleeping:
@@ -73,7 +77,7 @@ class MetaHandler(py_trees.behaviour.Behaviour):
         self._node.get_logger().warning(f'text is now {in_text}')
         words = in_text.split()
         self._node.get_logger().warning(f'text is now {words}')
-        if (len(words) > 1) and (words[0] == avatar_name):
+        if (len(words) > 1) and (re.match(avatar_name_pattern, words[0]) is not None):
             key = "".join(words[1:])
             self._node.get_logger().warning(f'We should process this {key}')
             try:

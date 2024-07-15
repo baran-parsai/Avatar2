@@ -61,6 +61,8 @@ def main(args=None):
     provided = py_trees.blackboard.Client(name="Provided")
     provided.register_key(key='avatar_name', access=py_trees.common.Access.WRITE)
     provided.avatar_name = 'Mary'
+    provided.register_key(key='avatar_name_pattern', access=py_trees.common.Access.WRITE)
+    provided.avatar_name_pattern = '^mary|merry$'
     print(provided)
 
     try:
