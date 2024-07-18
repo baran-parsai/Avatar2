@@ -18,9 +18,10 @@ def controller_create_root() -> py_trees.behaviour.Behaviour:
 
     # Map interesting ros topics to the blackboard
     topics2bb = py_trees.composites.Sequence(name = "Topics2BB", memory = True)
-    in_message = py_trees_ros.subscribers.ToBlackboard(name="in_message",
+
+    in_control_message = py_trees_ros.subscribers.ToBlackboard(name="in_control_message",
          qos_profile=py_trees_ros.utilities.qos_profile_unlatched(),
-         topic_name="/avatar2/in_message", topic_type=TaggedString, blackboard_variables = {'in_message' : None})
+         topic_name="/avatar2/in_control_message", topic_type=TaggedString, blackboard_variables = {'in_control_message' : None})
 
     # automatically publish interesting ros tops from the blackboard
     out_message = py_trees_ros.publishers.FromBlackboard(name="out_mesage",
@@ -28,6 +29,12 @@ def controller_create_root() -> py_trees.behaviour.Behaviour:
         topic_type = TaggedString,
         qos_profile = py_trees_ros.utilities.qos_profile_unlatched(),
         blackboard_variable = '/out_message')
+    
+    in_message = py_trees_ros.publishers.FromBlackboard(name="in_message",
+        topic_name = '/avatar2/in_message',
+        topic_type = TaggedString,
+        qos_profile = py_trees_ros.utilities.qos_profile_unlatched(),
+        blackboard_variable = '/in_message')
     
     # Deal with meta commands to the avatar
     meta = MetaHandler("meta handler")
@@ -44,10 +51,11 @@ def controller_create_root() -> py_trees.behaviour.Behaviour:
     # build the tree
     bits.add_child(meta)
     bits.add_child(avatar)
-    topics2bb.add_child(in_message)
+    topics2bb.add_child(in_control_message)
     root.add_child(topics2bb)
     root.add_child(bits)
     root.add_child(out_message)
+    root.add_child(in_message)
     root.add_child(idle)
 
     return root
@@ -62,7 +70,7 @@ def main(args=None):
     provided.register_key(key='avatar_name', access=py_trees.common.Access.WRITE)
     provided.avatar_name = 'Mary'
     provided.register_key(key='avatar_name_pattern', access=py_trees.common.Access.WRITE)
-    provided.avatar_name_pattern = '^mary|merry$'
+    provided.avatar_name_pattern = '^mary|merry$|^merry$'
     print(provided)
 
     try:

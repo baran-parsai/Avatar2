@@ -17,21 +17,22 @@ class AvatarHandler(py_trees.behaviour.Behaviour):
     def initialise(self):
         self.logger.debug(f"  {self.name} [NormalHandler:initialise()]")
         self._blackboard = py_trees.blackboard.Client(name="Avatar Handler")
-        self._blackboard.register_key(key="/in_message", access=py_trees.common.Access.READ)
-        self._blackboard.register_key(key="/in_message.text", access=py_trees.common.Access.READ)
-        self._blackboard.register_key(key="/in_message.text.data", access=py_trees.common.Access.READ)
+        self._blackboard.register_key(key="/in_control_message", access=py_trees.common.Access.READ)
+        self._blackboard.register_key(key="/in_control_message.text", access=py_trees.common.Access.READ)
+        self._blackboard.register_key(key="/in_control_message.text.data", access=py_trees.common.Access.READ)
         self._blackboard.register_key(key="/in_message.audio_sequence_number", access=py_trees.common.Access.READ)
         self._blackboard.register_key(key="/avatar_name", access=py_trees.common.Access.READ)
         self._blackboard.register_key(key="/out_message", access=py_trees.common.Access.WRITE)
+        self._blackboard.register_key(key="/in_message", access=py_trees.common.Access.READ)
 
 
     def update(self):
         self.logger.debug(f"  {self.name} [AvatarHandler:update()]")
-        self._node.get_logger().warning(f'avatar handler update text is {self._blackboard.in_message.text.data}')
-        self._node.get_logger().warning(f'avatar handler update number is {self._blackboard.in_message.audio_sequence_number}')
+        self._node.get_logger().warning(f'avatar handler update text is {self._blackboard.in_control_message.text.data}')
+        self._node.get_logger().warning(f'avatar handler update number is {self._blackboard.in_control_message.audio_sequence_number}')
 
-        sequence = self._blackboard.in_message.audio_sequence_number
-        in_text = self._blackboard.in_message.text.data.lower()
+        sequence = self._blackboard.in_control_message.audio_sequence_number
+        in_text = self._blackboard.in_control_message.text.data.lower()
 
         avatar_name = self._blackboard.avatar_name.lower()
         self._node.get_logger().warning(f'Avatars name is {avatar_name}')
@@ -41,7 +42,8 @@ class AvatarHandler(py_trees.behaviour.Behaviour):
         tagged_string.header.stamp = self._node.get_clock().now().to_msg()
         tagged_string.audio_sequence_number = sequence
         tagged_string.text.data = str(response)
-        self._blackboard.out_message = tagged_string
+        if self._blackboard.in_message is None:
+            self._blackboard.out_message = tagged_string
 
 
 
