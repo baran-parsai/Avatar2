@@ -26,14 +26,29 @@ class MetaHandler(py_trees.behaviour.Behaviour):
         
         self._sleeping = False
 
+    def _say_something_directly(self, s):
+        say_this = TaggedString()
+        say_this.header.stamp = self._node.get_clock().now().to_msg()
+        sequence = self._blackboard.in_control_message.audio_sequence_number
+        say_this.audio_sequence_number = sequence
+        say_this.text.data = str(in_text)
+        self._blackboard.out_message = user_input
+        
     # handlers must return 
     def _handler_awake(self, words):
-        self.logger.debug(f"  {self.name} [awake handler called]")
-        self._sleeping = False
+        self._node.get_logger.debug(f"  {self.name} [awake handler called]")
+        if not self_sleeping:
+            self.say_something_directly("But I am not sleeping now.")
+        else:                          
+            self._sleeping = False
+            self.say_something_directly("Ok. I am awake.")
 
     def _handler_sleep(self, words):
-        self.logger.debug(f"  {self.name} [sleep handler called]")
+        self._node.get_logger.debug(f"  {self.name} [sleep handler called]")
+        if not self._sleeping:
+            self.say_something_directly("Ok. I am going to sleep. Tell me to wake up if you want me to listen")
         self._sleeping = True
+        
 
     def setup(self, **kwargs):
         #kwargs['node'] is our ros node
@@ -89,6 +104,7 @@ class MetaHandler(py_trees.behaviour.Behaviour):
             self._node.get_logger().warning(f'We should process this {key}')
             try:
                 self._handlers[key](words)
+                self._node.get_logger().warning(f'{key} has been processed. Not sending to the llm')                
                 return py_trees.common.Status.SUCCESS
             except:
                 self._node.get_logger().warning(f'dont know {key}')
