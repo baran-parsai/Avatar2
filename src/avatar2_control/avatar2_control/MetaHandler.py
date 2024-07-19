@@ -26,13 +26,20 @@ class MetaHandler(py_trees.behaviour.Behaviour):
         
         self._sleeping = False
 
+    def _say_something_directly(self, sequence, s):
+        say_this = TaggedString()
+        say_this.header.stamp = self._node.get_clock().now().to_msg()
+        say_this.audio_sequence_number = sequence
+        say_this.text.data = str(in_text)
+        self._blackboard.out_message = user_input
+        
     # handlers must return 
     def _handler_awake(self, words):
-        self.logger.debug(f"  {self.name} [awake handler called]")
+        self._node.get_logger.debug(f"  {self.name} [awake handler called]")
         self._sleeping = False
 
     def _handler_sleep(self, words):
-        self.logger.debug(f"  {self.name} [sleep handler called]")
+        self._node.get_logger.debug(f"  {self.name} [sleep handler called]")
         self._sleeping = True
 
     def setup(self, **kwargs):
