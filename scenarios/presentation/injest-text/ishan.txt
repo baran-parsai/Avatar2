@@ -1,0 +1,80 @@
+Ishan Mangotra is a Mitacs Global Research Intern at York University for the summer internship for a period of 3 months spanning from May to August.
+
+Ishan Mangotra is from New Delhi, India and his home university is Netaji Subhas University of Technology (NSUT) situated in Dwarka, New Delhi, India.
+
+Ishan is currently pursuing his Bachelors in Technology (B.Tech) degree with a major in Information Technology at his home university.
+
+Ishan is an undergraduate student currently in his second year.
+
+Ishan has a passion for Artificial Intelligence and its applications in the field of Robotics.
+
+At the York University Ishan is working under the supervision of Professor Michael Jenkin on the research project titled ‘Intelligent Avatars for Human-Machine Interaction' at the Sherman Health Sciences Building, York University.
+
+Apart from professor Michael Jenkin and Ishan, the team working on this project includes Walleed Khan (a masters student at the York University), Deeksha Chandola (currently pursuing her PhD under supervision of professor Michael Jenkin) and Baran Parsai (first year undergraduate at York university).
+
+This project involves developing an avatar that interacts with humans.
+
+The project involves using an existing code base and adding additional functionality to the avatar including: leveraging large language model (LLM) technology to enhance interaction with the avatar, the actual appearance of the avatar and the ways in which the avatar integrates the perception of human sentiment in its interaction.
+
+This research project aims to create an advanced intelligent avatar designed to emulate human-like interactions seamlessly.
+
+The avatar is incorporated with sophisticated features such as synchronized lip movements and gaze tracking during conversations, realistic hand animations, and the capability to answer queries utilizing the Langchain framework trained on custom data.
+
+Moreover, this smart avatar will have an integrated facial recognition system to accurately identify account holders, ensuring personalized user interactions.
+
+Ishan has contributed to build this avatar in Unity.
+
+Ishan’s major contribution lies in the formation of the avatar’s appearance and interaction. This includes lip sync, animations, appearance of the avatar etc.
+
+The avatar went through different versions and new features were added whenever a more interesting library was discovered.
+
+Following are the versions of the avatar-
+Initial Avatar : UMA library was used for avatar appearance with Salsa lip sync and Langchain framework for answering the queries.
+version 1 : Convai library was explored which had in-built lip sync, eye and head tracking but was computationally and financially exhaustive.
+version 2 : Ready player me library was used for the avatar’s appearance, OVR lip sync and eye blinking were used to animate the avatar’s face but the OVR lip sync was incompatible with MAC OS.
+version 3 : Custom Ready player me avatar was built using the library’s image to avatar technology with Salsa lip sync.
+version 4 : version 4 has all the features of version 3 (Custom Ready player me avatar was built using the library’s image to avatar technology with Salsa lip sync) 
+Version 4 has additional animations added (for example the hand movements while talking) and langchain was integrated.
+
+The animations (like hand animations) are imported from a library which gives access to free animations known as the Mixamo library.
+
+These animations are executed with the help of a Finite state machine diagram which corresponds to the animator tab of the unity editor.
+
+The transition between the states have been coded in C sharp which is used by unity.
+
+Salsa head tracking has also been explored and will be integrated in the avatar.
+
+The interaction of the avatar with the user happens as follows:
+1. Face detection and the person identification happens just as the user enters the scenario.
+2. The avatar gets activated and starts the head tracking or the gaze tracking.
+3. The user asks a query and the avatar listens to the query while executing the idle animation.
+4. The audio file is processed as a .wav file and is converted from audio to text via the OpenAI’s whisper library.
+5. The langchain framework uses an LLM which is fed with custom textual data.
+6. The LLM searches in the textual data for the answer to the user’s query.
+7. If the answer is extracted successfully the text is converted to the audio (.wav file) again with the help of whisper library and is sent to the unity world via ROS(robotic operating system).
+8. The avatar answers with lip sync (Salsa Lip Sync) and hand animations to make the conversation more human like.
+9. ROS (Robotic Operating System) acts as the interface between Unity-made-avatar and the Langchain framework.
+
+Currently available avatars include that of Professor Michael Jenkin, Baran Parsai and Ishan Mangotra.
+
+Michael Jenkin is a Professor of Computer Science and Engineering and a member of the Centre for Vision Research at York University.
+
+Working in the fields of visually guided autonomous robots and virtual reality, Michael Jenkin has published over 200 research papers, including co-authoring Computational Principles of Mobile Robotics with Gregory Dudek and a series of co-edited books on human and machine vision with Laurence Harris.
+
+Michael has worked on a range of different intelligent systems including autonomous systems for survey tasks in nuclear power plants, crime scene investigation and scene remediation, and underwater and surface robot systems for environment monitoring.
+
+Michael Jenkin has done B.Sc. in 1982, M.Sc. in 1984 and Ph.D. in 1988 from Toronto.
+
+The Mitacs Globalink Research Internship is a highly competitive initiative that attracts talented researchers to Canada.
+
+Each year, interns from select Mitacs partner countries and regions come to Canada for 12 weeks from May to October to undertake research projects at Canadian universities.
+
+Mitacs is open to undergraduate students in Mitacs’s partner countries (Australia, Brazil, Chile, China, Colombia, France, Germany, Hong Kong, India, Mexico, South Korea, Taiwan, Tunisia, Ukraine, the United Kingdom, and the USA).
+
+However, due to the termination of agreements with Mitacs’s international partners in India, students enrolled in Indian institutions are not eligible for GRI 2025.
+
+Mitacs remains hopeful that they can resume the partnership with India in the future.
+
+The objective of Mitacs Globalink Research Internship is to build a bridge between Canada and emerging international research talent.
+
+The competitive initiative facilitates 12-week internships in research projects hosted by Canadian academic-institution faculty members in a variety of academic disciplines, from science, engineering, and mathematics to the humanities and social sciences.
