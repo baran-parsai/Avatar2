@@ -18,9 +18,9 @@ def generate_launch_description():
     ros_ui = False
 
     for arg in sys.argv[4:]:
-        if arg.startswith('config_file:='):
-            config_file = arg.split('config_file:=', 1)[1]
-            print(f"Launching with config_file as {config_file}")
+        if arg.startswith('scenario:='):
+            scenario = arg.split('scenario:=', 1)[1]
+            print(f"Launching with scenario as {scenario}")
         elif arg.startswith('ros_ui'):
             print(f"Launching with debug is {arg.split('ros_ui:=', 1)[1]}")
             ros_ui = bool(arg.split('ros_ui:=', 1)[1])
@@ -32,6 +32,7 @@ def generate_launch_description():
         else:
             print("Usage: launch avatar2 all.launch.py [root:=<root>] [scenario:=<scenario>] [ui_imagery:=<ui_imagery_root>] [ros_ui:= False|True]")
             sys.exit()
+    config_file = os.path.join(root, scenario, 'config.json')
     print(f"using config form {config_file}")
     
     with open(config_file) as f:
@@ -91,14 +92,22 @@ def generate_launch_description():
             parameters=[{'config_file': config_file}])
     nodes.append(face_recognizer_node)
         
-    llm_dolphin_clinic_node = Node(
+    llm_hermes_clinic_node = Node(
             package='avatar2',
             executable='llm_engine',
             name='llm_engine',
             output='screen',
             namespace="/avatar2",
             parameters=[{'config_file': config_file}])
-    nodes.append(llm_dolphin_clinic_node)
+    nodes.append(llm_hermes_clinic_node)
+
+    rosbridge_node = Node(
+            package='rosbridge_server',
+            executable='rosbridge_websocket',
+            name='rosbridge_websocket',
+            output='screen',
+            namespace="/avatar2")
+    nodes.append(rosbridge_node)
 
     if ros_ui:
         ros_node = Node(

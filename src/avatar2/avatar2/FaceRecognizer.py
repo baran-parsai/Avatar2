@@ -153,7 +153,7 @@ class FaceRecognizer:
         distance_mm = (real_face_width_mm * focal_length) / face_width_pixels
 
         distance_cm = distance_mm / 10  # Convert mm to cm
-        self._print(f'distance from the camera is {distance_cm} cm')
+        #self._print(f'distance from the camera is {distance_cm} cm')
 
         return distance_cm
     
