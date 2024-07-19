@@ -13,10 +13,11 @@ class LocalCache():
         self.cache = []
         self.cache_map = {}
         self.permanent_entries = {
-            'hi', 'hello', 'what is your name', 'how are you', 'tell me some information about the clinic',
-            'what kind of services are available at the clinic', 'who is the owner of the clinic', 'what can you tell me about penny', 'what does cyanide taste like',
-            'how many different types of hairing aids are there', 'what is the most common type of hearing aid', 'what is the most expensive hearing aid',
-            'goodbye'
+             'bluebell', 'a hollow voice says plugh'
+#            'hi', 'hello', 'what is your name', 'how are you', 'tell me some information about the clinic',
+#            'what kind of services are available at the clinic', 'who is the owner of the clinic', 'what can you tell me about penny', 'what does cyanide taste like',
+#            'how many different types of hairing aids are there', 'what is the most common type of hearing aid', 'what is the most expensive hearing aid',
+#            'goodbye'
         }
         self._node.get_logger().info(f"{self._node.get_name()} LocalCache alive! caching at {cache_file} logging to {log_dir}")
         self._logging_dir = log_dir
