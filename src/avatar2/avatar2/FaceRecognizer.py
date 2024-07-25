@@ -4,15 +4,16 @@ import pickle
 from collections import Counter
 import json
 import os
+import cv2
 
 # Author: Baran Parsai
 # Email: parsaibaran@gmail.com
-# Version: 1.1
-# Date: 06/21
+# Version: 1.2
+# Date: 07/12
 
 class FaceRecognizer:
-    DEFAULT_ENCODINGS_PATH = Path(os.path.join("/home/baranparsai/Documents/Avatar2/scenarios/hearing_clinic/faces", "faces.pkl"))
-    PEOPLE_INFO_PATH = Path(os.path.join("/home/baranparsai/Documents/Avatar2/scenarios/hearing_clinic/faces", "faces.json"))
+    DEFAULT_ENCODINGS_PATH = "faces.pkl"
+    PEOPLE_INFO_PATH = "faces.json"
     
     def __init__(self, encodings=DEFAULT_ENCODINGS_PATH, database = PEOPLE_INFO_PATH, debug = True):
         self.people_info = []
@@ -102,6 +103,14 @@ class FaceRecognizer:
         largest_face_location = None
         middle_row = 0.0
         middle_col = 0.0
+        distance = None
+
+        # Convert image to grayscale for depth estimation
+        gray_image = cv2.cvtColor(input_image, cv2.COLOR_BGR2GRAY)
+
+        # Define focal length and sensor height for Logitech C920x
+        focal_length = 615.0   # Focal length in pixels (based on Logitech C920x specs)
+        sensor_height = 3.6   # Sensor height in mm (based on Logitech C920x specs)
 
         for bounding_box, unknown_encoding in zip(input_face_locations, input_face_encodings):
             top, right, bottom, left = bounding_box
@@ -113,6 +122,19 @@ class FaceRecognizer:
                 largest_face_area = face_area
                 largest_face_location = bounding_box
 
+                # Calculate distance using depth estimation
+                face_width_pixels = right - left
+                face_height_pixels = bottom - top
+                
+                # Estimate distance using depth estimation formula
+                distance = self.estimate_distance(face_width_pixels, focal_length, sensor_height)
+                
+                # Ignore faces beyond 1 meter
+                if distance and distance > 100:  # Assuming distance is in centimeters
+                    largest_face_location = None
+                    distance = None
+                    continue
+
         #self._print(f"largest box is {largest_face_area}")
         id = -1
         name = {'name': 'unknown', 'ID': -1, 'role': 'unknown'}
@@ -123,13 +145,17 @@ class FaceRecognizer:
 
             if id >= 0:
                 name = self._database[id]
-        #self._print(name)
-
         return largest_face_location, name, middle_row, middle_col
+    
+    def estimate_distance(self, face_width_pixels, focal_length, sensor_height):
+        """Estimate distance using the depth estimation formula."""
+        real_face_width_mm = 160  # Real face width in mm
+        distance_mm = (real_face_width_mm * focal_length) / face_width_pixels
 
-    def Focal_Length_Finder(measured_distance, real_width, width_in_rf_image): 
-        focal_length = (width_in_rf_image * measured_distance) / real_width
-        return focal_length
+        distance_cm = distance_mm / 10  # Convert mm to cm
+        #self._print(f'distance from the camera is {distance_cm} cm')
+
+        return distance_cm
     
     def _recognize_face(self, unknown_encoding, loaded_encodings):
         """Recognize the face by comparing its encoding with loaded encodings.

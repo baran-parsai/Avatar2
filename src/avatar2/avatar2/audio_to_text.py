@@ -35,8 +35,11 @@ class Audio2TextNode(Node):
         self.create_service(Listen, self._listen, self._listener_callback)
         self._listening = True
         self._listening_time = self.get_clock().now().nanoseconds
+
+        self._debug = True
         if self._debug:
             self.get_logger().info(f"{self.get_name()} Time {self._listening_time}")
+            self.get_logger().info(f"{self.get_name()} publishing to {message}")
 
     def _listener_callback(self, msg, resp):
         """Deal with service call to set listening status"""

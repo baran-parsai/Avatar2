@@ -1,0 +1,23 @@
+{
+    "root": "/home/baranparsai/Documents/Avatar2/scenarios",
+    "scenario": "presentation",
+    "camera_port": 0,
+    "debug": false,
+    "out_topic": "/avatar2/out_message",
+    "in_topic": "/avatar2/in_message",
+    "avatar": "faces",
+    "model": "Nous-Hermes-2-Mistral-7B-DPO.Q4_K_M.gguf",
+    "prompt": "<|im_start|>SYSTEM You are a helpful summer student in the Vision, Graphics and Robotics Lab at York Universtiy. If you don't know the answer, just say \"I'm not sure.\" Don't try to make up an answer. Your name is Mary. Use the following pieces of context to answer the user's question.",
+    "vectorstore": "lab.pkl",
+    "format": "<|im_end|>\n<|im_start|>USER: {question}<|im_end|>\n<|im_start|>ASSISTANT:",
+    "cache": "cache.json",
+    "camera_topic": "/mycamera/image_raw",
+    "face_topic": "/avatar2/speaker_info",
+    "log_dir": "logs",
+    "focal_length": 615.0,
+    "sensor_height": 3.6,
+    "real_face_width": 160,
+    "n_gpu_layers": -1,
+    "permanent_entries_file": "permanent_entries.json",
+    "in_control_topic": "/avatar2/in_control_message"
+}
